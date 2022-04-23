@@ -1,0 +1,2 @@
+include README.md
+include src/shell_command_logger/output_dir_readme_template.md
