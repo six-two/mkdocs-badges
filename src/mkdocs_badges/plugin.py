@@ -4,6 +4,7 @@ import mkdocs
 # local files
 from . import replace_normal_badges
 from .install_badge import InstallBadgeManager
+from .custom_badge import replace_custom_badges
 from .assets import BADGE_CSS, BADGE_JS, INSTALL_BADGE_DATA, copy_asset_if_target_file_does_not_exist
 
 DEFAULT_BADGE_CSS_PATH = "assets/stylesheets/badge.css"
@@ -15,6 +16,7 @@ class BadgesPlugin(mkdocs.plugins.BasePlugin):
         # Options to enable specific seatures
         ("install_badges", mkdocs.config.config_options.Type(bool, default=True)),
         ("normal_badges", mkdocs.config.config_options.Type(bool, default=True)),
+        ("custom_badges", mkdocs.config.config_options.Type(bool, default=True)),
         # Options to allow overwriting CSS and/or JS files
         ("badge_css", mkdocs.config.config_options.Type(str, default="")),
         ("badge_js", mkdocs.config.config_options.Type(str, default="")),
@@ -53,7 +55,9 @@ class BadgesPlugin(mkdocs.plugins.BasePlugin):
             
             if self.config["normal_badges"]:
                 markdown = replace_normal_badges(markdown)
-                pass
+
+            if self.config["custom_badges"]:
+                markdown = replace_custom_badges(markdown)
 
             return markdown
         except KeyError as error:

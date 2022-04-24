@@ -11,7 +11,7 @@
     },
     "github": {
         "title": "Github",
-        "link_template": "https://gitlab.com/{{value}}",
+        "link_template": "https://github.com/{{value}}",
         "command_template": "git clone https://github.com/{{value}}.git"
     },
     "gitlab": {

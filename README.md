@@ -31,9 +31,8 @@ Badges are defined like this:
 
 ```
 |@github:six-two/mkdocs-badges|
-|@pip:mkdocs-badges|
-|"Badge name":badge value|
-|"Height":N/A|
+|"Height":1.58m|
+|t:Password|c:Tr0ub4dor&3|v:Tr0ub4dor&3|l:https://xkcd.com/936/|end
 ```
 
 This should create badges that look like this (actual colors will depend on your theme):
@@ -67,6 +66,33 @@ Clicking on the badge's value `six-two/mkdocs-badges` will bring the user to the
 The currently supported badge names can be seen in `src/mkdocs_badges/assets/install_badge_data.json`.
 You can define also your own badge data and use the `install_badge_data` setting to use it as your data file.
 
+### Custom badges
+
+Custom badges allow users to use the features from install badges (such as copying text on click) for their own custom badges.
+
+They have the following structure:
+
+```
+|t:Badge type|c:Text to copy on click|v:Value to show|l:Link to follow when the badge is clicked|end
+```
+
+Some of the fields are optional, but they need to be supplied in the correct order:
+
+```
+|t:Badge with|v:example link|https://example.com|end
+|t:Normal|v:badge|end
+```
+
+See the following table for more details:
+
+Field | Type | Description
+---|---|---
+t: | required | The badge *type* to show on the left side of the badge
+c: | optional | Text to *copy*, when (the left side of) the badge is clicked
+v: | required | The badge *value* to show on the right side of the badge
+l: | optional | *Link* to follow when clicking on (the right side of) the badge
+end | required | Signals the end of the badge
+
 
 ## Configuration
 
@@ -74,6 +100,7 @@ Confiruration option | Type | Default value | Description
 ---|---|---|---
 install_badges | bool | `True` | Enables parsing of install badges. Use `False` to not parse them
 normal_badges | bool | `True` | Enables parsing of normal badges. Use `False` to not parse them
+custom_badges | bool | `True` | Enables parsing of custom badges. Use `False` to not parse them
 badge_css | str | `""` | Use a different CSS file for the badges. The given path will be added to `extra_css`, so that it is included on every page. If the file does not exist or an empty value is used, the default CSS is used.
 badge_js | str | `""` | Use a different JavaScript file for the badges. The given path will be added to `extra_javascript`, so that it is included on every page. If the file does not exist or an empty value is used, the default JavaScript code is used.
 install_badge_data | str | `""` | Load the install badge data from the given file.
