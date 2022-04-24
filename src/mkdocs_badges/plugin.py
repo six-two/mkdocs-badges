@@ -1,6 +1,10 @@
+import os
+# pip dependency
 import mkdocs
-from . import replace_install_badges, replace_normal_badges
-from .assets import BADGE_CSS, BADGE_JS, copy_asset_if_target_file_does_not_exist
+# local files
+from . import replace_normal_badges
+from .install_badge import InstallBadgeManager
+from .assets import BADGE_CSS, BADGE_JS, INSTALL_BADGE_DATA, copy_asset_if_target_file_does_not_exist
 
 DEFAULT_BADGE_CSS_PATH = "assets/stylesheets/badge.css"
 DEFAULT_BADGE_JS_PATH = "assets/javascripts/badge.js"
@@ -8,11 +12,14 @@ DEFAULT_BADGE_JS_PATH = "assets/javascripts/badge.js"
 
 class BadgesPlugin(mkdocs.plugins.BasePlugin):
     config_scheme = (
+        # Options to enable specific seatures
         ("install_badges", mkdocs.config.config_options.Type(bool, default=True)),
         ("normal_badges", mkdocs.config.config_options.Type(bool, default=True)),
-        # If it is empty -> use the default file; Otherwise use the file supplied by the user
+        # Options to allow overwriting CSS and/or JS files
         ("badge_css", mkdocs.config.config_options.Type(str, default="")),
         ("badge_js", mkdocs.config.config_options.Type(str, default="")),
+        # Allow overwriting the install badge data
+        ("install_badge_data", mkdocs.config.config_options.Type(str, default="")),
     )
 
     def on_config(self, config, **kwargs):
@@ -27,6 +34,12 @@ class BadgesPlugin(mkdocs.plugins.BasePlugin):
         if badge_js_path not in extra_js:
             extra_js.append(badge_js_path)
 
+        # Load the install badge data from the data file
+        if self.config["install_badges"]:
+            current_dir = os.path.dirname(__file__)
+            install_badge_data_path = self.config["install_badge_data"] or INSTALL_BADGE_DATA
+            self.install_badge_manager = InstallBadgeManager(install_badge_data_path)
+
         return config
 
     def on_page_markdown(self, markdown: str, page, config, files) -> str:
@@ -36,7 +49,7 @@ class BadgesPlugin(mkdocs.plugins.BasePlugin):
         """
         try:
             if self.config["install_badges"]:
-                markdown = replace_install_badges(markdown)
+                markdown = self.install_badge_manager.replace_install_badges(markdown)
             
             if self.config["normal_badges"]:
                 markdown = replace_normal_badges(markdown)

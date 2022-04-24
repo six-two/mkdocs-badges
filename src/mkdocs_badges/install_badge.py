@@ -1,6 +1,7 @@
 import re
 import html
-from typing import NamedTuple
+import json
+from typing import NamedTuple, Optional
 # local files
 from . import replace_regex_matches, LOGGER
 from .normal_badge import replace_function as normal_badge_replace_function
@@ -9,76 +10,54 @@ from .normal_badge import replace_function as normal_badge_replace_function
 REGEX = re.compile("\|@([a-zA-Z0-9]+):([^\|]+)\|")
 
 
-class SpecialBadge(NamedTuple):
-    title: str
-    link_template: str
-    command_template: str
+class InstallBadgeData:
+    def __init__(self, title: str, link_template: str, command_template: str) -> None:
+        self.title = title
+        self.link_template = link_template
+        self.command_template = command_template
+
+    def get_link(self, value: str) -> str:
+        return self.link_template.replace("{{value}}", value)
+
+    def get_command(self, value: str) -> str:
+        return self.command_template.replace("{{value}}", value)
 
 
-# TODO: add an option to load those from a file
-BADGE_DATA_MAP = {
-    "aur": SpecialBadge(
-        title="Arch Linux (AUR)",
-        link_template="https://aur.archlinux.org/packages/{package}",
-        command_template="sudo pacaur -S {package}",
-    ),
-    "gem": SpecialBadge(
-        title="Ruby Gem",
-        link_template="https://rubygems.org/gems/{package}",
-        command_template="gem install {package}",
-    ),
-    "github": SpecialBadge(
-        title="Github",
-        link_template="https://github.com/{package}",
-        command_template="git clone https://github.com/{package}",
-    ),
-    "gitlab": SpecialBadge(
-        title="Gitlab",
-        link_template="https://gitlab.com/{package}",
-        command_template="git clone https://gitlab.com/{package}",
-    ),
-    "kali": SpecialBadge(
-        title="Kali Linux",
-        link_template="https://pkg.kali.org/pkg/{package}",
-        command_template="sudo apt install {package}",
-    ),
-    "pacman": SpecialBadge(
-        title="Arch Linux",
-        link_template="https://archlinux.org/packages/?name={package}",
-        command_template="sudo pacman -S {package}",
-    ),
-    "pypi": SpecialBadge(
-        title="PyPI",
-        link_template="https://pypi.org/project/{package}",
-        command_template="pip install {package}",
-    ),
-}
+class InstallBadgeManager:
+    def __init__(self, file_path: str) -> None:
+        self.badges = {}
+        
+        with open(file_path, "r") as f:
+            file_data = json.load(f)
 
+        for badge_type, badge_data in file_data.items():
+            title = badge_data["title"]
+            link_template = badge_data["link_template"]
+            command_template = badge_data["command_template"]
 
-def replace_function(match: re.Match) -> str:
-    badge_type = match.group(1)
-    badge_value = match.group(2)
+            self.badges[badge_type] = InstallBadgeData(title, link_template, command_template)
 
-    badge_data = BADGE_DATA_MAP.get(badge_type)
+    def replace_install_badges(self, text: str) -> str:
+        return replace_regex_matches(REGEX, text, self._replace_function)
 
-    if badge_data:
-        install_command = badge_data.command_template.format(package=badge_value)
-        install_command = html.escape(install_command)
-        package_url = badge_data.link_template.format(package=badge_value)
-        package_url = html.escape(package_url)
+    def _replace_function(self, match: re.Match) -> str:
+        badge_type = match.group(1)
+        badge_value = match.group(2)
 
-        return ("<span class='badge special'>"+
-            f"<span class=title onclick=\"on_click_badge_name('{install_command}')\">{badge_data.title}</span>"+
-            f"<a href=\"{package_url}\">"+
-                f"<span class=value>{badge_value}</span>"+
-            "</a>"+
-        "</span>")
-    else:
-        LOGGER.warn(f"Unknown special badge type: '{badge_type}' in '{match.group(0)}'")
-        # fallback: use 
-        return normal_badge_replace_function(match)
+        badge_data = self.badges.get(badge_type)
+        if badge_data:
+            install_command = badge_data.get_command(badge_value)
+            install_command = html.escape(install_command)
+            package_url = badge_data.get_link(badge_value)
+            package_url = html.escape(package_url)
 
-
-def replace_install_badges(text: str) -> str:
-    return replace_regex_matches(REGEX, text, replace_function)
-
+            return ("<span class='badge special'>"+
+                f"<span class=title onclick=\"on_click_badge_name('{install_command}')\">{badge_data.title}</span>"+
+                f"<a href=\"{package_url}\">"+
+                    f"<span class=value>{badge_value}</span>"+
+                "</a>"+
+            "</span>")
+        else:
+            LOGGER.warn(f"Unknown special badge type: '{badge_type}' in '{match.group(0)}'")
+            # fallback: use a normal badge
+            return normal_badge_replace_function(match)

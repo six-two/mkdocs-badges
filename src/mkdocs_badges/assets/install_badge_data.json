@@ -1,0 +1,42 @@
+{
+    "aur": {
+        "title": "Arch Linux (AUR)",
+        "link_template": "https://aur.archlinux.org/packages/{{value}}",
+        "command_template": "sudo pacaur -S {{value}}"
+    },
+    "gem": {
+        "title": "Ruby Gem",
+        "link_template": "https://rubygems.org/gems/{{value}}",
+        "command_template": "gem install {{value}}"
+    },
+    "github": {
+        "title": "Github",
+        "link_template": "https://gitlab.com/{{value}}",
+        "command_template": "git clone https://github.com/{{value}}.git"
+    },
+    "gitlab": {
+        "title": "Gitlab",
+        "link_template": "https://gitlab.com/{{value}}",
+        "command_template": "git clone https://gitlab.com/{{value}}"
+    },
+    "kali": {
+        "title": "Kali Linux",
+        "link_template": "https://pkg.kali.org/pkg/{{value}}",
+        "command_template": "sudo apt install {{value}}"
+    },
+    "pacman": {
+        "title": "Arch Linux",
+        "link_template": "https://archlinux.org/packages/?name={{value}}",
+        "command_template": "sudo pacman -S {{value}}"
+    },
+    "pypi": {
+        "title": "PyPI",
+        "link_template": "https://pypi.org/project/{{value}}",
+        "command_template": "pip install {{value}}"
+    },
+    "": {
+        "title": "",
+        "link_template": "{{value}}",
+        "command_template": "{{value}}"
+    }
+}

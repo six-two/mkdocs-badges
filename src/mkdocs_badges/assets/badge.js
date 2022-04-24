@@ -1,4 +1,8 @@
 const on_click_badge_name = (text) => {
+    const on_error = reason => {
+        console.error("Copying text failed:", reason);
+        iqwerty.toast.toast("Failed to copy text", options);
+    };
     const options = {
         style: {
             main: {
@@ -9,11 +13,17 @@ const on_click_badge_name = (text) => {
             },
         },
         settings: {
-			duration: 1500,
+            duration: 1500,
 		},
     };
-    navigator.clipboard.writeText(text);
-    iqwerty.toast.toast(`Copied "${text}"`, options);
+    console.log("Copying text:", text);
+    try {
+        navigator.clipboard.writeText(text).then(
+            () => iqwerty.toast.toast(`Copied "${text}"`, options)
+        ).catch(on_error);
+    } catch (error) {
+        on_error(error);
+    }
 }
 
 // https://github.com/mlcheng/js-toast/ - MIT License - Copyright (c) 2016 Michael Cheng

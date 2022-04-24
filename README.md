@@ -64,9 +64,8 @@ They are defined like this:
 Clicking on the badge name `Github` will copy the command used to install the software (`git clone https://github.com/six-two/mkdocs-badges`).
 Clicking on the badge's value `six-two/mkdocs-badges` will bring the user to the package's site (`https://github.com/six-two/mkdocs-badges`).
 
-The currently supported badge names can be seen in `src/mkdocs_badges/install_badge.py`.
-You can also edit that file to add any badge types you may need.
-In the future I plan to read the data from a data file, so that users can add custom ones.
+The currently supported badge names can be seen in `src/mkdocs_badges/assets/install_badge_data.json`.
+You can define also your own badge data and use the `install_badge_data` setting to use it as your data file.
 
 
 ## Configuration
@@ -76,8 +75,6 @@ Confiruration option | Type | Default value | Description
 install_badges | bool | `True` | Enables parsing of install badges. Use `False` to not parse them
 normal_badges | bool | `True` | Enables parsing of normal badges. Use `False` to not parse them
 badge_css | str | `""` | Use a different CSS file for the badges. The given path will be added to `extra_css`, so that it is included on every page. If the file does not exist or an empty value is used, the default CSS is used.
-badge_js | str | `""` | Use a different JavaScirpt file for the badges. The given path will be added to `extra_javascript`, so that it is included on every page. If the file does not exist or an empty value is used, the default JavaScirpt code is used.
+badge_js | str | `""` | Use a different JavaScript file for the badges. The given path will be added to `extra_javascript`, so that it is included on every page. If the file does not exist or an empty value is used, the default JavaScript code is used.
+install_badge_data | str | `""` | Load the install badge data from the given file.
 
-## TODO
-
-- Load install badge data from a JSON/YAML file (and also make it customizable)
