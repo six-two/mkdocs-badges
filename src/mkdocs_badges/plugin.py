@@ -1,11 +1,33 @@
 import mkdocs
 from . import replace_install_badges, replace_normal_badges
+from .assets import BADGE_CSS, BADGE_JS, copy_asset_if_target_file_does_not_exist
+
+DEFAULT_BADGE_CSS_PATH = "assets/stylesheets/badge.css"
+DEFAULT_BADGE_JS_PATH = "assets/javascripts/badge.js"
+
 
 class BadgesPlugin(mkdocs.plugins.BasePlugin):
     config_scheme = (
-        ('install_badges', mkdocs.config.config_options.Type(bool, default=True)),
-        ('normal_badges', mkdocs.config.config_options.Type(bool, default=True)),
+        ("install_badges", mkdocs.config.config_options.Type(bool, default=True)),
+        ("normal_badges", mkdocs.config.config_options.Type(bool, default=True)),
+        # If it is empty -> use the default file; Otherwise use the file supplied by the user
+        ("badge_css", mkdocs.config.config_options.Type(str, default="")),
+        ("badge_js", mkdocs.config.config_options.Type(str, default="")),
     )
+
+    def on_config(self, config, **kwargs):
+        # Make sure that the CSS and JS badge files are included on every page
+        badge_css_path = self.config["badge_css"] or DEFAULT_BADGE_CSS_PATH
+        extra_css = config["extra_css"]
+        if badge_css_path not in extra_css:
+            extra_css.append(badge_css_path)
+
+        badge_js_path = self.config["badge_js"] or DEFAULT_BADGE_JS_PATH
+        extra_js = config["extra_javascript"]
+        if badge_js_path not in extra_js:
+            extra_js.append(badge_js_path)
+
+        return config
 
     def on_page_markdown(self, markdown: str, page, config, files) -> str:
         """
@@ -22,4 +44,13 @@ class BadgesPlugin(mkdocs.plugins.BasePlugin):
 
             return markdown
         except KeyError as error:
-            raise PluginError(str(error))
+            raise mkdocs.exceptions.PluginError(str(error))
+
+    def on_post_build(self, config):
+        # Copy the default files if the user hasn't supplied his own version
+        output_dir = config["site_dir"]
+        badge_css_path = self.config["badge_css"] or DEFAULT_BADGE_CSS_PATH
+        copy_asset_if_target_file_does_not_exist(output_dir, badge_css_path, BADGE_CSS)
+
+        badge_js_path = self.config["badge_js"] or DEFAULT_BADGE_JS_PATH
+        copy_asset_if_target_file_does_not_exist(output_dir, badge_js_path, BADGE_JS)

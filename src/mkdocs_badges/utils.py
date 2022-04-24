@@ -1,6 +1,7 @@
 from typing import Callable
 from re import Pattern, Match
 
+
 def replace_regex_matches(compiled_regex: Pattern, text: str, replace_function: Callable[[Match], str]) -> str:
     """
     Replace all non-overlapping occurences of the given regex

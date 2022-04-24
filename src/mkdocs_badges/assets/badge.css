@@ -1,0 +1,30 @@
+:root {
+    --md-badge-rounded-size: 4px;
+    --md-badge-padding-size: 5px;
+}
+
+.badge {
+    color: white;
+    display: inline-block;
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+
+.badge .title {
+    padding: var(--md-badge-padding-size);
+    background-color: gray;
+    border-bottom-left-radius: var(--md-badge-rounded-size);
+    border-top-left-radius: var(--md-badge-rounded-size);
+}
+
+.badge .value {
+    color: white;
+    padding: var(--md-badge-padding-size);
+    background-color: var(--md-primary-fg-color);
+    border-bottom-right-radius: var(--md-badge-rounded-size);
+    border-top-right-radius: var(--md-badge-rounded-size);
+}
+
+.badge.special .title {
+    cursor: help;
+}
