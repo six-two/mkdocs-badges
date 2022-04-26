@@ -6,7 +6,8 @@ const on_click_badge_name = (text) => {
     const options = {
         style: {
             main: {
-                "background": "var(--md-primary-fg-color)",
+                // Use red as a fallback, so that I will notice (default is light blue)
+                "background": "var(--md-badge-color, red)",
                 "color": "white",
                 "font-size": "20px",
                 "font-weight": "bold",

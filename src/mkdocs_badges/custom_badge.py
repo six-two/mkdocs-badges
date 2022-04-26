@@ -13,7 +13,8 @@ def part(name: str, optional: bool = False) -> str:
         regex = f"(?:{regex})?"
     return regex
 
-REGEX = re.compile(part("t") + part("c", True) + part("v") + part("l", True) + "\|end")
+# Allow the |end syntax for now, it made sense in v1.1.0
+REGEX = re.compile(part("t") + part("c", True) + part("v") + part("l", True) + "\|(?:end)?")
 
 
 def replace_function(match: re.Match) -> str:

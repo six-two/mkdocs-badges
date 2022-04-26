@@ -105,3 +105,11 @@ badge_css | str | `""` | Use a different CSS file for the badges. The given path
 badge_js | str | `""` | Use a different JavaScript file for the badges. The given path will be added to `extra_javascript`, so that it is included on every page. If the file does not exist or an empty value is used, the default JavaScript code is used.
 install_badge_data | str | `""` | Load the install badge data from the given file.
 
+## Notable changes
+
+### Version 0.2.0
+
+- Each badge now needs to be the only thing on its line
+- Badges inside code blocks are no longer parsed
+- The `|end` at the end of custom badges is no longer neccessary. A simple `|` is enough. This shorter form is recommended from now on.
+- Documentation is now in the `docs` folder in the form of a mkdocs website

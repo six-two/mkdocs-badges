@@ -1,6 +1,8 @@
 :root {
     --md-badge-rounded-size: 4px;
     --md-badge-padding-size: 5px;
+    /* Try to use the mkdocs material primary color. If it is undefined use blue*/
+    --md-badge-color: var(--md-primary-fg-color, #2FA4E7);
 }
 
 .badge {
@@ -20,7 +22,7 @@
 .badge .value {
     color: white;
     padding: var(--md-badge-padding-size);
-    background-color: var(--md-primary-fg-color);
+    background-color: var(--md-badge-color);
     border-bottom-right-radius: var(--md-badge-rounded-size);
     border-top-right-radius: var(--md-badge-rounded-size);
 }

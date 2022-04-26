@@ -1,0 +1,11 @@
+.result {
+    padding: 10px;
+    background-color: #eee;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.result .badge {
+    margin-bottom: 5px;
+}

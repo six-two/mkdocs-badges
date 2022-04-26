@@ -1,0 +1,14 @@
+site_name: mkdocs-badges
+
+nav:
+# Hide the index page -> would otherwise result in two mkdocs-badges links
+- "": index.md
+- badges.md
+- setup.md
+
+plugins:
+- search
+- badges
+
+extra_css:
+- assets/stylesheets/custom.css
