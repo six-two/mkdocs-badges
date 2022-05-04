@@ -5,6 +5,12 @@
 
 This package allows you to add badges to your mkdocs site.
 
+## Documentation
+
+This README is just a short intro to the package.
+For detailed information please see the [documentation](https://mkdocs-badges.six-two.dev/).
+The documentation is also available in the `docs` folder of the source code and can be built localy with [MkDocs](https://www.mkdocs.org/).
+
 ## Setup
 
 Install the plugin using pip:
@@ -113,3 +119,4 @@ install_badge_data | str | `""` | Load the install badge data from the given fil
 - Badges inside code blocks are no longer parsed
 - The `|end` at the end of custom badges is no longer neccessary. A simple `|` is enough. This shorter form is recommended from now on.
 - Documentation is now in the `docs` folder in the form of a mkdocs website
+- Added link badges

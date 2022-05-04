@@ -1,7 +1,8 @@
 # mkdocs-badges
 
 |@github:six-two/mkdocs-badges|
-|@pypi:mkdocs|
+|@pypi:mkdocs-badges|
+|&Documentation: https://mkdocs-badges.six-two.dev/|
 
 `mkdocs-badges` is a plugin for [mkdocs](https://www.mkdocs.org/), that creates badges like the ones you see above this line.
 
