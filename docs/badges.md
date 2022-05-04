@@ -48,17 +48,37 @@ Result:
 |@pypi:mkdocs-badges|
 </div>
 
-## Advanced badges
+## Link badges
 
-Advanced badges offer all features supported by the other badge types.
+Link badges link to a given URL.
+They only have the (simplified version of) the hostname specified in the link as visible value
+
+### Example
+
+```markdown
+|&Bug Tracker: https://github.com/six-two/mkdocs-badges/issues|
+|&Simplified hostname demo:https://www.example.com|
+```
+
+Result:
+
+<div class=result>
+|&Bug Tracker: https://github.com/six-two/mkdocs-badges/issues|
+|&Simplified hostname demo:https://www.example.com|
+</div>
+
+
+## Custom badges
+
+Custom badges offer all features supported by the other badge types.
 They have however a more verbose syntax.
 Compared to the install badges, the link and text to copy are not automatically generated.
 Instead you can supply them.
-If you do not supply them, an advanced badge will behave like a simple badge.
+If you do not supply them, an custom badge will behave like a simple badge.
 
 ### Example 1
 
-The following is the advanced badge equivalent of the `|"Example badge":works|` simple badge:
+The following is the custom badge equivalent of the `|"Example badge":works|` simple badge:
 
 ```markdown
 |t:Example badge|v:works|
@@ -72,7 +92,7 @@ Result:
 
 ### Example 2
 
-The following is the advanced badge equivalent of the `|@github:six-two/mkdocs-badges|` install badge.
+The following is the custom badge equivalent of the `|@github:six-two/mkdocs-badges|` install badge.
 As you can see it is a much longer and more verbose format with quite a bit of redundant information:
 
 
@@ -88,7 +108,7 @@ Result:
 
 ### Example 3
 
-You can also create advanced badges that only copy thex when clicked or that only link to a webpage.
+You can also create custom badges that only copy thex when clicked or that only link to a webpage.
 When only one action is defined, clicking anywhere on the badge will trigger it:
 
 ```markdown

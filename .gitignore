@@ -1,3 +1,6 @@
+# mkdocs build output (from ./build-docs.sh)
+public/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
