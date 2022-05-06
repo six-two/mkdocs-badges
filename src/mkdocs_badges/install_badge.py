@@ -4,8 +4,7 @@ import json
 from typing import NamedTuple, Optional
 # local files
 from . import replace_regex_matches, LOGGER
-from .normal_badge import normal_badge
-from .custom_badge import custom_badge
+from .badge_html import generate_badge_html
 
 # |@name:value|
 REGEX = re.compile("\|@([a-zA-Z0-9]+):([^\|]+)\|")
@@ -47,11 +46,12 @@ class InstallBadgeManager:
 
         badge_data = self.badges.get(badge_type)
         if badge_data:
+            title = badge_data.title
             install_command = badge_data.get_command(badge_value)
             package_url = badge_data.get_link(badge_value)
 
-            return custom_badge(badge_type, badge_value, install_command, package_url)
+            return generate_badge_html(title, badge_value, copy_text=install_command, link=package_url)
         else:
             LOGGER.warn(f"Unknown special badge type: '{badge_type}' in '{match.group(0)}'")
             # fallback: use a normal badge
-            return normal_badge(badge_type, badge_value)
+            return generate_badge_html(badge_type, badge_value)

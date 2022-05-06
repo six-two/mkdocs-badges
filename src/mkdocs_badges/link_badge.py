@@ -2,7 +2,7 @@ import re
 import urllib
 # local files
 from . import replace_regex_matches
-from .custom_badge import custom_badge
+from .badge_html import generate_badge_html
 
 
 # |&badge name:link url|
@@ -38,7 +38,7 @@ def link_badge(badge_type: str, badge_value: str) -> str:
             # store our change in the original variable
             simplified_host_name = ".".join(parts)
 
-    return custom_badge(badge_type, simplified_host_name, "", badge_value)
+    return generate_badge_html(badge_type, simplified_host_name, link=badge_value)
 
 
 def replace_link_badges(text: str) -> str:
