@@ -12,7 +12,9 @@
     margin-bottom: 15px;
 }
 
-.badge a:hover, a.badge:hover {
+.badge a:hover,
+a.badge:hover,
+.badge-reflink:hover {
     text-decoration: underline;
     color: var(--md-badge-text-color);
 }

@@ -5,7 +5,7 @@ from typing import Optional
 SEPARATOR = "<span class=sep> | </span>"
 
 
-def generate_badge_html(badge_type: str, badge_value: str, copy_text: str = "", link: str = "", extra_classes: list[str] = []) -> str:
+def generate_badge_html(badge_type: str, badge_value: str, copy_text: Optional[str] = None, link: Optional[str] = None, extra_classes: list[str] = []) -> str:
     value_link = None
     outer_link = None
     title_copy = None

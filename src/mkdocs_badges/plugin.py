@@ -2,11 +2,10 @@ import os
 # pip dependency
 import mkdocs
 # local files
-from . import replace_normal_badges
+from . import LOGGER
 from .install_badge import InstallBadgeManager
-from .custom_badge import replace_custom_badges
-from .link_badge import replace_link_badges
 from .assets import BADGE_CSS, BADGE_JS, INSTALL_BADGE_DATA, copy_asset_if_target_file_does_not_exist
+from .badge_handler import replace_badges
 
 DEFAULT_BADGE_CSS_PATH = "assets/stylesheets/badge.css"
 DEFAULT_BADGE_JS_PATH = "assets/javascripts/badge.js"
@@ -14,11 +13,8 @@ DEFAULT_BADGE_JS_PATH = "assets/javascripts/badge.js"
 
 class BadgesPlugin(mkdocs.plugins.BasePlugin):
     config_scheme = (
-        # Options to enable specific seatures
-        ("install_badges", mkdocs.config.config_options.Type(bool, default=True)),
-        ("normal_badges", mkdocs.config.config_options.Type(bool, default=True)),
-        ("link_badges", mkdocs.config.config_options.Type(bool, default=True)),
-        ("custom_badges", mkdocs.config.config_options.Type(bool, default=True)),
+        # Options to enable specific features
+        ("enabled", mkdocs.config.config_options.Type(bool, default=True)),
         # Options to allow overwriting CSS and/or JS files
         ("badge_css", mkdocs.config.config_options.Type(str, default="")),
         ("badge_js", mkdocs.config.config_options.Type(str, default="")),
@@ -39,10 +35,9 @@ class BadgesPlugin(mkdocs.plugins.BasePlugin):
             extra_js.append(badge_js_path)
 
         # Load the install badge data from the data file
-        if self.config["install_badges"]:
-            current_dir = os.path.dirname(__file__)
-            install_badge_data_path = self.config["install_badge_data"] or INSTALL_BADGE_DATA
-            self.install_badge_manager = InstallBadgeManager(install_badge_data_path)
+        current_dir = os.path.dirname(__file__)
+        install_badge_data_path = self.config["install_badge_data"] or INSTALL_BADGE_DATA
+        self.install_badge_manager = InstallBadgeManager(install_badge_data_path)
 
         return config
 
@@ -52,20 +47,13 @@ class BadgesPlugin(mkdocs.plugins.BasePlugin):
         See: https://www.mkdocs.org/dev-guide/plugins/#on_page_markdown
         """
         try:
-            if self.config["install_badges"]:
-                markdown = self.install_badge_manager.replace_install_badges(markdown)
-            
-            if self.config["normal_badges"]:
-                markdown = replace_normal_badges(markdown)
-
-            if self.config["link_badges"]:
-                markdown = replace_link_badges(markdown)
-
-            if self.config["custom_badges"]:
-                markdown = replace_custom_badges(markdown)
+            if self.config["enabled"]:
+                markdown = replace_badges(markdown, self.install_badge_manager)
+            else:
+                LOGGER.warning("mkdocs-badges plugin is disabled")
 
             return markdown
-        except KeyError as error:
+        except Exception as error:
             raise mkdocs.exceptions.PluginError(str(error))
 
     def on_post_build(self, config):

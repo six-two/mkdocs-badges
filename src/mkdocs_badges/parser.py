@@ -2,14 +2,50 @@
 # This parser decides, which lines to parse as badges and extracts the data used to construct the badges
 from typing import NamedTuple, Optional
 import re
+# local files
+from . import LOGGER
 
-class ParsedBadge(NamedTuple):
-    badge_type: Optional[str]
-    title: str
-    value: str
-    copy_text: Optional[str]
-    link: Optional[str]
-    html_classes: list[str]
+class BadgeException(Exception):
+    pass
+
+
+class ParsedBadge:
+    def __init__(
+            self,
+            badge_type: Optional[str],
+            title: str,
+            value: str,
+            copy_text: Optional[str],
+            link: Optional[str],
+            reflink: Optional[str],
+            html_classes: list[str],
+        ):
+        self.badge_type = badge_type
+        self.title = title
+        self.value = value
+        self.copy_text = copy_text
+        self.link = link
+        self.reflink = reflink
+        self.html_classes = html_classes
+
+    def check_fields(self) -> None:
+        if not self.title:
+            raise BadgeException("No title set")
+        if not self.value:
+            raise BadgeException("No value set")
+        
+        if self.link and self.reflink:
+            raise BadgeException("Mutually exclusive fields 'link' and 'reflink' set")
+
+    def assert_empty(self, name: str) -> None:
+        value = self.__dict__.get(name, None)
+        if value:
+            raise BadgeException(f"Expected empty value for field '{name}', but got {repr(value)}")
+
+    def assert_all_empty(self, name_list: list[str]) -> None:
+        for name in name_list:
+            self.assert_empty(name)
+
 
 class ParserResultEntry(NamedTuple):
     line_index: int
@@ -21,6 +57,7 @@ TABLE_HEADER_REGEX = re.compile(r"^\s*\|?"+ TABLE_CELL_REGEX + r"(\|" + TABLE_CE
 CLASS_ATTR_REGEX = re.compile(r"^(?:\.|(?:class:))(.*)$")
 COPY_ATTR_REGEX = re.compile(r"^c(?:opy)?:(.*)$")
 LINK_ATTR_REGEX = re.compile(r"^l(?:ink)?:(.*)$")
+REF_LINK_ATTR_REGEX = re.compile(r"^r(?:eflink)?:(.*)$")
 
 # Test string: a|b|c\|d|e\\|f\\\|g\\\\h|\\\\\i|\\\\\\j|k
 SEPARATOR = "|"
@@ -57,6 +94,7 @@ def parse_badge_parts(parts: list[str]) -> ParsedBadge:
         raise Exception(f"Rejected '{badge_type}'. Badge type needs to have a length of 1 or be empty")
     copy_text = None
     link = None
+    reflink = None
     html_classes = []
     attribute_list = parts[3:-1]
 
@@ -69,24 +107,28 @@ def parse_badge_parts(parts: list[str]) -> ParsedBadge:
                 raise Exception("Multiple 'c:' / 'copy:' attributes defined")
             else:
                 copy_text = match.group(1)
-                print("c:",copy_text)
         elif match := LINK_ATTR_REGEX.match(attribute):
             if link:
                 raise Exception("Multiple 'l:' / 'link:' attributes defined")
             else:
                 link = match.group(1)
-                print("l:",link)
+        elif match := REF_LINK_ATTR_REGEX.match(attribute):
+            if reflink:
+                raise Exception("Multiple 'r:' / 'reflink:' attributes defined")
+            else:
+                reflink = match.group(1)
         else:
             raise Exception(f"Unknown attribute: '{attribute}'")
 
 
     return ParsedBadge(
-        badge_type=badge_type,
-        title=parts[1],
-        value=parts[2],
-        copy_text= copy_text,
-        link=link,
-        html_classes=html_classes,
+        badge_type,
+        parts[1],
+        parts[2],
+        copy_text,
+        link,
+        reflink,
+        html_classes,
     )
 
 
@@ -103,7 +145,7 @@ def parse_file(lines: list[str]) -> list[ParserResultEntry]:
     # TODO: do proper checks for a markdown table (for example store clumns count and check header line)
     # if the last line is a possible badge, this will store them
     # This behavior is required to handle tables, since the first line may be the start of a table or a badge
-    last_line_parts = []
+    last_line_parts: list[str] = []
     
     for line_index, line in enumerate(lines):
         ls_line = line.lstrip()
@@ -136,8 +178,8 @@ def parse_file(lines: list[str]) -> list[ParserResultEntry]:
                 )
                 results.append(entry)
             except Exception as ex:
-                print("error parsing badge:", ex)
-                pass
+                LOGGER.warning(f"Failed to parse badge: {ex}")
+
             last_line_parts = []
 
         if not ignore_line and not is_fenced_code_block and not is_table:

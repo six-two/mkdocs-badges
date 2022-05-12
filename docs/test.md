@@ -12,17 +12,15 @@ I|pypi|mkdocs|
 
 ## Properties
 
-c:|copy: | text to copy
-l:|link: | link
-.<name>|class:<name> | HTML class styling. Can be used multiple times
-
 |with properties 1|test|c:text to copy|l:https://example.com|.html-class|class:html-class2|
 
 ## special cases
 
-|text contains a \| pipe symbol|value
-|missing value|
-I|missing|value
+|text contains a \| pipe symbol|value|
+
+|missing value, should not be rendered|
+
+I|missing value|should not be rendered
 
 Since this format matches the markdown tables format, I need to make sure that no header comes before ant of my values
 
@@ -47,4 +45,12 @@ xyz|invalid type|should not be parsed|
 |trailing stuff|should not be parsed|trailing
 
 |repeated attribute|should not be parsed|c:text to copy|c:https://example.com||c:html-class2|
+
+### Reflink badges
+
+R|reflink badge|example_ref|
+
+|normal badge with reflink|should work|r:example_ref|
+
+[example_ref]: https://www.example.com
 

@@ -1,13 +1,10 @@
-import re
 import html
 import json
 from typing import NamedTuple, Optional
 # local files
-from . import replace_regex_matches, LOGGER
+from . import LOGGER
 from .badge_html import generate_badge_html
-
-# |@name:value|
-REGEX = re.compile("\|@([a-zA-Z0-9]+):([^\|]+)\|")
+from .parser import ParsedBadge
 
 
 class InstallBadgeData:
@@ -37,12 +34,9 @@ class InstallBadgeManager:
 
             self.badges[badge_type] = InstallBadgeData(title, link_template, command_template)
 
-    def replace_install_badges(self, text: str) -> str:
-        return replace_regex_matches(REGEX, text, self._replace_function)
-
-    def _replace_function(self, match: re.Match) -> str:
-        badge_type = match.group(1)
-        badge_value = match.group(2)
+    def format_badge(self, badge: ParsedBadge) -> str:
+        badge_type = badge.title
+        badge_value = badge.value
 
         badge_data = self.badges.get(badge_type)
         if badge_data:
@@ -50,7 +44,7 @@ class InstallBadgeManager:
             install_command = badge_data.get_command(badge_value)
             package_url = badge_data.get_link(badge_value)
 
-            return generate_badge_html(title, badge_value, copy_text=install_command, link=package_url)
+            return generate_badge_html(title, badge_value, copy_text=install_command, link=package_url, extra_classes=["badge-install"])
         else:
             LOGGER.warn(f"Unknown special badge type: '{badge_type}' in '{match.group(0)}'")
             # fallback: use a normal badge
