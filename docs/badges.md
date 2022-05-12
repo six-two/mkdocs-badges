@@ -8,17 +8,78 @@ Badges inside (fenced) code bocks are also not interpreted.
 
 Simple badges are just a badge that does not react to clicks.
 
-### Example 1
+Example markdown:
 
-Markdown code:
 ```
-|"Example badge":works|
+|Example badge|works|
 ```
 
 Result:
 
 <div class=result>
-|"Example badge":works|
+|Example badge|works|
+</div>
+
+
+## Link badges
+
+Link badges link to a given URL.
+They only have the (simplified version of) the hostname specified in the link as visible value
+
+Example markdown:
+
+```markdown
+L|Bug Tracker|https://github.com/six-two/mkdocs-badges/issues|
+L|Simplified hostname demo|https://www.example.com|
+```
+
+Result:
+
+<div class=result>
+L|Bug Tracker|https://github.com/six-two/mkdocs-badges/issues|
+L|Simplified hostname demo|https://www.example.com|
+</div>
+
+## Reference link badges
+
+Reference link badges link to a given URL using reference links.
+They are similar to link badges, but display the reference name as value
+
+Example markdown:
+
+```markdown
+R|reflink badge|example_ref|
+|normal badge with reflink|should work|r:example_ref|
+
+[example_ref]: https://www.example.com
+```
+
+Result:
+
+<!-- Can not be inside HTML, since it contains markdown that needs to be parsed for the link to work -->
+<!-- <div class=result> -->
+R|reflink badge|example_ref|
+|normal badge with reflink|should work|r:example_ref|
+<!-- </div> -->
+
+
+
+## Copy badges
+
+Copy badges copy their value to the users clipboard when clicked upon
+
+Example markdown:
+
+```markdown
+C|Password|monkey123|
+C|Linux check ethernet settings|ip a s eth0|
+```
+
+Result:
+
+<div class=result>
+C|Password|monkey123|
+C|Linux check ethernet settings|ip a s eth0|
 </div>
 
 
@@ -33,38 +94,19 @@ To show them what has happened, a popup is shown once they clicked.
 The right side is a link to the software on the given platorrm (github repo, PyPI page, linux package tracker, etc).
 
 
-### Example 1
+Example markdown:
 
 Markdown code:
 ```
-|@github:six-two/mkdocs-badges|
-|@pypi:mkdocs|
+I|github|six-two/mkdocs-badges|
+I|pypi|mkdocs|
 ```
 
 Result:
 
 <div class=result>
-|@github:six-two/mkdocs-badges|
-|@pypi:mkdocs-badges|
-</div>
-
-## Link badges
-
-Link badges link to a given URL.
-They only have the (simplified version of) the hostname specified in the link as visible value
-
-### Example
-
-```markdown
-|&Bug Tracker: https://github.com/six-two/mkdocs-badges/issues|
-|&Simplified hostname demo:https://www.example.com|
-```
-
-Result:
-
-<div class=result>
-|&Bug Tracker: https://github.com/six-two/mkdocs-badges/issues|
-|&Simplified hostname demo:https://www.example.com|
+I|github|six-two/mkdocs-badges|
+I|pypi|mkdocs|
 </div>
 
 
@@ -72,54 +114,27 @@ Result:
 
 Custom badges offer all features supported by the other badge types.
 They have however a more verbose syntax.
-Compared to the install badges, the link and text to copy are not automatically generated.
-Instead you can supply them.
-If you do not supply them, an custom badge will behave like a simple badge.
+On the upside you are in total control about the supplied values, since none of them are automaticaly generated.
 
-### Example 1
-
-The following is the custom badge equivalent of the `|"Example badge":works|` simple badge:
+Example markdown:
 
 ```markdown
-|t:Example badge|v:works|
+|Link badge equivalent|example.com|link:https://www.example.com|
+|Copy badge equivalent|text to show|copy:text to copy|
+|Install badge equivalent|mkdocs-badge|link:https://github.com/six-two/mkdocs-badges|copy:git clone https://github.com/six-two/mkdocs-badges.git|
+|Reflink badge equivalent|example.com|r:example_ref|
 ```
 
 Result:
 
 <div class=result>
-|t:Example badge|v:works|
+|Link badge equivalent|example.com|link:https://www.example.com|
+|Copy badge equivalent|text to show|copy:text to copy|
+|Install badge equivalent|mkdocs-badge|link:https://github.com/six-two/mkdocs-badges|copy:git clone https://github.com/six-two/mkdocs-badges.git|
 </div>
-
-### Example 2
-
-The following is the custom badge equivalent of the `|@github:six-two/mkdocs-badges|` install badge.
-As you can see it is a much longer and more verbose format with quite a bit of redundant information:
+|Reflink badge equivalent|example.com|r:example_ref|
 
 
-```markdown
-|t:github|c:git clone https://github.com/six-two/mkdocs-badges.git|v:six-two/mkdocs-badges|l:https://github.com/six-two/mkdocs-badges.git|
-```
-
-Result:
-
-<div class=result>
-|t:github|c:git clone https://github.com/six-two/mkdocs-badges.git|v:six-two/mkdocs-badges|l:https://github.com/six-two/mkdocs-badges.git|
-</div>
-
-### Example 3
-
-You can also create custom badges that only copy thex when clicked or that only link to a webpage.
-When only one action is defined, clicking anywhere on the badge will trigger it:
-
-```markdown
-|t:Copy text when clicked|c:Value to copy|v:Value to show|
-|t:Badge with link to|v:wikipedia|l:https://www.wikipedia.org/|
-```
-
-Result:
-
-<div class=result>
-|t:Copy text when clicked|c:Value to copy|v:Value to show|
-|t:Badge with link to|v:wikipedia|l:https://www.wikipedia.org/|
-</div>
+<!-- Link references -->
+[example_ref]: https://www.example.com
 
