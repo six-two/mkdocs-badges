@@ -46,6 +46,6 @@ class InstallBadgeManager:
 
             return generate_badge_html(title, badge_value, copy_text=install_command, link=package_url, extra_classes=["badge-install"])
         else:
-            warning(f"Unknown install badge type: '{badge_type}' in '{match.group(0)}'")
+            warning(f"Unknown install badge type: '{badge_type}'")
             # fallback: use a normal badge
             return generate_badge_html(badge_type, badge_value)

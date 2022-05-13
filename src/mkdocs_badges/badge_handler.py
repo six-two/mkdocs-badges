@@ -1,4 +1,4 @@
-import urllib
+from urllib.parse import urlparse
 # local files
 from . import warning
 from .parser import ParsedBadge, BadgeException, parse_file
@@ -70,7 +70,7 @@ def format_badge(badge: ParsedBadge, install_badge_manager: InstallBadgeManager)
 
 def get_simplified_hostname(url: str) -> str:
     url = url.strip()
-    simplified_host_name = urllib.parse.urlparse(url).netloc
+    simplified_host_name = urlparse(url).netloc
     if not simplified_host_name:
         raise Exception(f"No hostname in URL: '{url}'")
     
