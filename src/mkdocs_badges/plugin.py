@@ -2,7 +2,7 @@ import os
 # pip dependency
 import mkdocs
 # local files
-from . import LOGGER
+from . import warning
 from .install_badge import InstallBadgeManager
 from .assets import BADGE_CSS, BADGE_JS, INSTALL_BADGE_DATA, copy_asset_if_target_file_does_not_exist
 from .badge_handler import replace_badges
@@ -50,7 +50,7 @@ class BadgesPlugin(mkdocs.plugins.BasePlugin):
             if self.config["enabled"]:
                 markdown = replace_badges(markdown, self.install_badge_manager)
             else:
-                LOGGER.warning("mkdocs-badges plugin is disabled")
+                warning("Plugin is disabled")
 
             return markdown
         except Exception as error:

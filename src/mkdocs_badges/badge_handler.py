@@ -1,6 +1,6 @@
 import urllib
 # local files
-from . import LOGGER
+from . import warning
 from .parser import ParsedBadge, BadgeException, parse_file
 from .badge_html import generate_badge_html
 from .install_badge import InstallBadgeManager
@@ -23,7 +23,7 @@ def replace_badges(markdown: str, install_badge_manager: InstallBadgeManager) ->
 
             lines[index] = format_badge(badge, install_badge_manager)
         except BadgeException as error:
-            LOGGER.warning(f"Badge processing error: {error}")
+            warning(f"Processing error: {error}")
     
     return "\n".join(lines)
 

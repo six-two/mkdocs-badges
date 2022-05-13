@@ -2,7 +2,7 @@ import html
 import json
 from typing import NamedTuple, Optional
 # local files
-from . import LOGGER
+from . import warning
 from .badge_html import generate_badge_html
 from .parser import ParsedBadge
 
@@ -46,6 +46,6 @@ class InstallBadgeManager:
 
             return generate_badge_html(title, badge_value, copy_text=install_command, link=package_url, extra_classes=["badge-install"])
         else:
-            LOGGER.warn(f"Unknown special badge type: '{badge_type}' in '{match.group(0)}'")
+            warning(f"Unknown install badge type: '{badge_type}' in '{match.group(0)}'")
             # fallback: use a normal badge
             return generate_badge_html(badge_type, badge_value)

@@ -1,4 +1,5 @@
 .result {
+    display: block;
     padding: 10px;
     background-color: #eee;
     border: 1px solid #aaa;

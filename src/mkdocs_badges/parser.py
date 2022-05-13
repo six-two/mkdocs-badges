@@ -3,7 +3,7 @@
 from typing import NamedTuple, Optional
 import re
 # local files
-from . import LOGGER
+from . import warning
 
 class BadgeException(Exception):
     pass
@@ -178,7 +178,7 @@ def parse_file(lines: list[str]) -> list[ParserResultEntry]:
                 )
                 results.append(entry)
             except Exception as ex:
-                LOGGER.warning(f"Failed to parse badge: {ex}")
+                warning(f"Failed to parse badge: {ex}")
 
             last_line_parts = []
 
