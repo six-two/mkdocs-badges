@@ -20,13 +20,16 @@ class ParsedBadge:
             reflink: Optional[str],
             html_classes: list[str],
         ):
-        self.badge_type = badge_type
-        self.title = title
-        self.value = value
-        self.copy_text = copy_text
-        self.link = link
-        self.reflink = reflink
-        self.html_classes = html_classes
+        # Use the "or None" statements to make sure that the values are really None and not just "". Otherwise two equal seeming objects may not be equal
+        self.badge_type = badge_type or None
+        # It would look starnge with leading/trailing whitespace
+        self.title = title.strip()
+        self.value = value.strip()
+        self.copy_text = copy_text or None
+        self.link = link or None
+        self.reflink = reflink or None
+        # Sort the class names to maye equality checks easier
+        self.html_classes = list(sorted(html_classes or []))
 
     def check_fields(self) -> None:
         if not self.title:
@@ -45,6 +48,35 @@ class ParsedBadge:
     def assert_all_empty(self, name_list: list[str]) -> None:
         for name in name_list:
             self.assert_empty(name)
+
+    def __repr__(self) -> str:
+        parts = [
+            self.badge_type or "",
+            self.title,
+            self.value,
+        ]
+        if self.copy_text:
+            parts.append(f"c:{self.copy_text}")
+        if self.link:
+            parts.append(f"l:{self.link}")
+        if self.reflink:
+            parts.append(f"r:{self.reflink}")
+        if self.html_classes:
+            parts += self.html_classes
+
+        return f"<ParsedBadge:{parts}>"
+
+    def __eq__(self, other) -> bool:
+        if isinstance(other, self.__class__):
+            return (self.badge_type == other.badge_type
+                and self.title == other.title
+                and self.value == other.value
+                and self.copy_text == other.copy_text
+                and self.link == other.link
+                and self.reflink == other.reflink
+                and self.html_classes == other.html_classes)
+        else:
+            return False
 
 
 class ParserResultEntry(NamedTuple):

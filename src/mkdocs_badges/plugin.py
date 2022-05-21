@@ -1,6 +1,8 @@
 import os
 # pip dependency
 import mkdocs
+from mkdocs.config.config_options import Type
+from mkdocs.plugins import BasePlugin
 from mkdocs.config.base import Config
 from mkdocs.structure.pages import Page
 from mkdocs.structure.files import Files
@@ -14,18 +16,18 @@ DEFAULT_BADGE_CSS_PATH = "assets/stylesheets/badge.css"
 DEFAULT_BADGE_JS_PATH = "assets/javascripts/badge.js"
 
 
-class BadgesPlugin(mkdocs.plugins.BasePlugin):
+class BadgesPlugin(BasePlugin):
     config_scheme = (
         # Options to enable specific features
-        ("enabled", mkdocs.config.config_options.Type(bool, default=True)),
+        ("enabled", Type(bool, default=True)),
         # Options to allow overwriting CSS and/or JS files
-        ("badge_css", mkdocs.config.config_options.Type(str, default="")),
-        ("badge_js", mkdocs.config.config_options.Type(str, default="")),
+        ("badge_css", Type(str, default="")),
+        ("badge_js", Type(str, default="")),
         # Allow overwriting the install badge data
-        ("install_badge_data", mkdocs.config.config_options.Type(str, default="")),
+        ("install_badge_data", Type(str, default="")),
     )
 
-    def on_config(self, config : Config, **kwargs) -> Config:
+    def on_config(self, config: Config, **kwargs) -> Config:
         """
         Called once when the config is loaded.
         It will make modify the config and initialize this plugin.
