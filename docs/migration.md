@@ -19,7 +19,7 @@ Some of the badges can be updated with th following sed commands.
 Please commit / back up your files before attemting this, since the potential of corrupting your files may exist.
 
 Use the following sed command, to update all markdown files at once.
-The command must be repeated with each pattern:
+The command must be repeated for each `<pattern>`:
 ```bash
 find ./docs/ -iname "*.md" -exec sed -i <pattern> '{}' \;
 ```

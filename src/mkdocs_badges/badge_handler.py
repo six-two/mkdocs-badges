@@ -1,7 +1,7 @@
 from urllib.parse import urlparse
 # local files
 from . import warning
-from .parser import ParsedBadge, BadgeException, parse_file
+from .parser import ParsedBadge, BadgeException, FileParser
 from .badge_html import generate_badge_html
 from .install_badge import InstallBadgeManager
 
@@ -14,16 +14,15 @@ STRIP_SUBDOMAINS = [
     "m", # Pretty standard for mobile sites
 ]
 
-def replace_badges(markdown: str, install_badge_manager: InstallBadgeManager) -> str:
+def replace_badges(file_name: str, markdown: str, install_badge_manager: InstallBadgeManager) -> str:
     lines = markdown.split("\n")
-    for parser_result_entry in parse_file(lines):
+    for parser_result_entry in FileParser(file_name, lines).process():
+        index = parser_result_entry.line_index
+        badge = parser_result_entry.parsed_badge
         try:
-            index = parser_result_entry.line_index
-            badge = parser_result_entry.parsed_badge
-
             lines[index] = format_badge(badge, install_badge_manager)
         except BadgeException as error:
-            warning(f"Processing error: {error}")
+            warning(f"[{file_name}:{index+1}] Processing error: {error}")
     
     return "\n".join(lines)
 

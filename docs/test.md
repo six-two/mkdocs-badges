@@ -46,6 +46,10 @@ xyz|invalid type|should not be parsed|
 
 |repeated attribute|should not be parsed|c:text to copy|c:https://example.com||c:html-class2|
 
+||Badge with empty title, should fail|
+
+|Badge with empty value, should fail||
+
 ### Reflink badges
 
 R|reflink badge|example_ref|

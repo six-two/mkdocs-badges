@@ -63,6 +63,8 @@ REF_LINK_ATTR_REGEX = re.compile(r"^r(?:eflink)?:(.*)$")
 SEPARATOR = "|"
 ESCAPE = "\\"
 ALLOWED_ESCAPED_CHARACTERS = [ESCAPE, SEPARATOR]
+
+
 def split_by_separator(text: str) -> list[str]:
     result = []
     current_part = ""
@@ -88,6 +90,7 @@ def split_by_separator(text: str) -> list[str]:
     result.append(current_part)
     return result
 
+
 def parse_badge_parts(parts: list[str]) -> ParsedBadge:
     badge_type = parts[0]
     if len(badge_type) > 1:
@@ -104,21 +107,21 @@ def parse_badge_parts(parts: list[str]) -> ParsedBadge:
             html_classes.append(attr)
         elif match := COPY_ATTR_REGEX.match(attribute):
             if copy_text:
-                raise Exception("Multiple 'c:' / 'copy:' attributes defined")
+                raise BadgeException("Multiple 'c:' / 'copy:' attributes defined")
             else:
                 copy_text = match.group(1)
         elif match := LINK_ATTR_REGEX.match(attribute):
             if link:
-                raise Exception("Multiple 'l:' / 'link:' attributes defined")
+                raise BadgeException("Multiple 'l:' / 'link:' attributes defined")
             else:
                 link = match.group(1)
         elif match := REF_LINK_ATTR_REGEX.match(attribute):
             if reflink:
-                raise Exception("Multiple 'r:' / 'reflink:' attributes defined")
+                raise BadgeException("Multiple 'r:' / 'reflink:' attributes defined")
             else:
                 reflink = match.group(1)
         else:
-            raise Exception(f"Unknown attribute: '{attribute}'")
+            raise BadgeException(f"Unknown attribute: '{attribute}'")
 
 
     return ParsedBadge(
@@ -132,82 +135,103 @@ def parse_badge_parts(parts: list[str]) -> ParsedBadge:
     )
 
 
-# This is a mess. TODO: rewrite
-def parse_file(lines: list[str]) -> list[ParserResultEntry]:
-    """
-    Parses a set of lines. Returns a list of all badges found.
-    """
-    # add an empty line at the end to allow the last line to be parsed correctly
-    lines = [*lines, ""]
-    is_fenced_code_block = False
-    is_table = False
-    results = []
-    # TODO: do proper checks for a markdown table (for example store clumns count and check header line)
-    # if the last line is a possible badge, this will store them
-    # This behavior is required to handle tables, since the first line may be the start of a table or a badge
-    last_line_parts: list[str] = []
-    
-    for line_index, line in enumerate(lines):
+class FileParser:
+    def __init__(self, file_name: str, file_content_lines: list[str]):
+        self.file_name = file_name
+        # Add an empty line, since for the table header check we need to look ahead one line
+        # This is way easier than specialized edge case handling rules
+        self.lines = [*file_content_lines, ""]
+        self.is_fenced_code_block = False
+        self.is_table = False
+
+    def should_process_line(self, index: int) -> bool:
+        line = self.lines[index]
+        ls_line = line.lstrip()
+
+        if not ls_line:
+            # An empty line. Marks the end of a table (if one was open). Should not be processed
+            self.is_table = False
+            return False
+
+        if ls_line.startswith("```"):
+            # This line starts/ends a code block, so it can not contain a badge
+            self.is_fenced_code_block = not self.is_fenced_code_block
+            return False
+
+        if self.is_fenced_code_block:
+            # Do not parse badges in fenced code blocks
+            return False
+
+        if ls_line != line:
+            # This line is indented (probably a code block). Do not process
+            return False
+
+        if TABLE_HEADER_REGEX.match(line):
+            # This is probably the start of a table. This line should not be processed
+            self.is_table = True
+            return False
+
+        if self.is_table:
+            # If we are in a table, we do not process badges
+            return False
+
+        # If we found no reason not to process the line, we should process it
+        return True
+
+    def try_parse_line(self, index: int) -> Optional[ParserResultEntry]:
         try:
-            ls_line = line.lstrip()
-            ignore_line = False
+            line = self.lines[index]
+            line = line.rstrip()
 
-            # Do not proccess lines with leading whitespace
-            if ls_line != line:
-                ignore_line = True
-            # Check for code block
-            elif ls_line.startswith("```"):
-                is_fenced_code_block = not is_fenced_code_block
-                ignore_line = True
+            # Check if the line has pipe "|" symbols at the beginning and ending
+            if "|" not in line[:2] or line[-1] != "|":
+                # Missing pipe symbol, this can not be a badge
+                return None
 
-            # Watch for the ---|--- line of a table. If found, the previous line is ignored, since it is actually table columns
-            if not is_fenced_code_block and TABLE_HEADER_REGEX.match(line):
-                is_table = True
-                last_line_parts = []
-                ignore_line = True
+            parts = split_by_separator(line)
+            # A valid line needs at least three pipes (four parts): "|title|value|" -> ["", "title", "value", ""]
+            if len(parts) < 4:
+                # This can not be a valid badge, since it has to few parts
+                return None
 
-            # watch for the table ending
-            if ls_line == "":
-                is_table = False
-
-            if last_line_parts:
-                try:
-                    parsed_badge = parse_badge_parts(last_line_parts)
-                    entry = ParserResultEntry(
-                        line_index=line_index-1,
-                        parsed_badge=parsed_badge
-                    )
-                    results.append(entry)
-                except Exception as ex:
-                    warning(f"Parsing error: {ex}")
-
-                last_line_parts = []
-
-            if not ignore_line and not is_fenced_code_block and not is_table:
-                # It is only a badge if the first few characters contain a "|"
-                if "|" in line[:3]:
-                    parts = split_by_separator(line.rstrip())
-                    # At least three separators. Line ends with separator
-                    if len(parts) >= 4 and parts[-1] == "":
-                        last_line_parts = parts
-        except BadgeException as ex:
-            warning(ex)
+            # Check if the next line is a table header indicator
+            next_line = self.lines[index + 1]
+            if TABLE_HEADER_REGEX.match(next_line):
+                # This line is probably the table header, so we do not try to parse it
+                return None
             
-    return results
+            # This is not a table header, so let's try parsing it
+            try:
+                parsed_badge = parse_badge_parts(parts)
+                # Return the badge info that we parsed
+                return ParserResultEntry(
+                    line_index=index,
+                    parsed_badge=parsed_badge,
+                )
+            except Exception as ex:
+                # Parsing failed, let's give some info to help with debugging
+                warning(f"[{self.file_name}:{index+1}] Parsing error: {ex}")
+                return None
 
+        except BadgeException as ex:
+            # General error, probably caused by bad input (like invalid escape seqouence)
+            warning(f"[{self.file_name}:{index+1}] General processing error: {ex}")
+            return None
 
-if __name__ == "__main__":
-    print("table header regex:", TABLE_HEADER_REGEX.pattern, "\n")
-    test_str = r"a|b|c\|d|e\\|f\\\|g\\\\|h\\\\\|i\\\\\\|j"
-    print(test_str, "->", "['"+"', '".join(split_by_separator(test_str))+"']")
+    def process(self) -> list[ParserResultEntry]:
+        """
+        Process the lines of the file and return the line numbers and parsed data of the found badges.
+        Should only be called once, since instance variables are not reset!
+        """
+        results = []
+        # Subtract one, since we added the empty line in the constructor
+        real_line_count = len(self.lines) - 1
+        for index in range(real_line_count):
+            # Check if we should try to process the line
+            if self.should_process_line(index):
+                # Actually try to process the line
+                if result := self.try_parse_line(index):
+                    # It worked :)
+                    results.append(result)
 
-    import argparse
-    ap = argparse.ArgumentParser()
-    ap.add_argument("file", help="the file to parse")
-    args = ap.parse_args()
-
-    with open(args.file, "r") as f:
-        lines = f.readlines()
-        for line_index, parsed in parse_file(lines):
-            print(f"\nLine {line_index+1}: '{lines[line_index][:-1]}'")
-            print(parsed)
+        return results

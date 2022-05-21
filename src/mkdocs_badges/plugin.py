@@ -55,7 +55,8 @@ class BadgesPlugin(mkdocs.plugins.BasePlugin):
         """
         try:
             if self.config["enabled"]:
-                markdown = replace_badges(markdown, self.install_badge_manager)
+                file_name = page.file.src_path
+                markdown = replace_badges(file_name, markdown, self.install_badge_manager)
             else:
                 warning("Plugin is disabled")
 
