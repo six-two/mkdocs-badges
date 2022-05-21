@@ -11,6 +11,15 @@ This README is just a short intro to the package.
 For a quick start and detailed information please see the [documentation](https://mkdocs-badges.six-two.dev/).
 The documentation is also available in the `docs` folder of the source code and can be built localy with [MkDocs](https://www.mkdocs.org/).
 
+## Unit tests
+
+The github repository now contains some unit test.
+You can run them against the current code with the following command (issued in the root directory of the repository):
+
+```bash
+pip install . && python -m unittest
+```
+
 
 ## Notable changes
 
