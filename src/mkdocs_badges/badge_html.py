@@ -2,7 +2,12 @@ import html
 from typing import Optional
 
 # Invisible separator. Used to make spell checking work correctly and have the copied text be more natural
-SEPARATOR = "<span class=sep> | </span>"
+def as_separator_html(value: str) -> str:
+    return f"<span class=sep>{value}</span>"
+
+START = as_separator_html(" [")
+SEPARATOR = as_separator_html(" | ")
+END = as_separator_html("] ")
 
 
 def generate_badge_html(badge_type: str, badge_value: str, copy_text: Optional[str] = None, link: Optional[str] = None, extra_classes: list[str] = []) -> str:
@@ -24,7 +29,7 @@ def generate_badge_html(badge_type: str, badge_value: str, copy_text: Optional[s
     title_html = element(badge_type, ["title"], copy_text=title_copy)
     value_html = element(badge_value, ["value"], link=value_link)
 
-    inner_html = title_html + SEPARATOR + value_html
+    inner_html = START + title_html + SEPARATOR + value_html + END
     outer_classes = ["badge", *extra_classes]
     return element(inner_html, outer_classes, link=outer_link, copy_text=outer_copy)
 
