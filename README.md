@@ -23,6 +23,11 @@ pip install . && python -m unittest
 
 ## Notable changes
 
+### Version 0.3.1
+
+- Better error handling, fixed a crash
+- Started adding unit tests
+
 ### Version 0.3.0
 
 - Breaking changes to the badges formats. See the [migration guide](https://mkdocs-badges.six-two.dev/migration/)
