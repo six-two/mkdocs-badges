@@ -16,6 +16,13 @@ I|pypi|mkdocs|
 
 ## special cases
 
+|emoji badge, should work|👍|
+
+|image too big|<img src="/assets/img/test.png">|
+
+|image small|<img src="/assets/img/test.png" width=50 height=15>|
+
+
 |text contains a \| pipe symbol|value|
 
 |missing value, should not be rendered|
