@@ -4,6 +4,16 @@
         "link_template": "https://aur.archlinux.org/packages/{{value}}",
         "command_template": "sudo pacaur -S {{value}}"
     },
+    "brew": {
+        "title": "Homebrew",
+        "link_template": "https://formulae.brew.sh/formula/{{value}}",
+        "command_template": "brew install {{value}}"
+    },
+    "debian": {
+        "title": "Debian",
+        "link_template": "https://packages.debian.org/stable/{{value}}",
+        "command_template": "sudo apt install {{value}}"
+    },
     "gem": {
         "title": "Ruby Gem",
         "link_template": "https://rubygems.org/gems/{{value}}",
@@ -23,6 +33,11 @@
         "title": "Kali Linux",
         "link_template": "https://pkg.kali.org/pkg/{{value}}",
         "command_template": "sudo apt install {{value}}"
+    },
+    "npm": {
+        "title": "npm",
+        "link_template": "https://www.npmjs.com/package/{{value}}",
+        "command_template": "npm install {{value}}"
     },
     "pacman": {
         "title": "Arch Linux",
