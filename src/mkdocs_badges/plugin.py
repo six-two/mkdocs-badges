@@ -6,6 +6,8 @@ from mkdocs.plugins import BasePlugin
 from mkdocs.config.base import Config
 from mkdocs.structure.pages import Page
 from mkdocs.structure.files import Files
+
+from mkdocs_badges.tag_badge import TagBadgeManager
 # local files
 from . import warning
 from .install_badge import InstallBadgeManager
@@ -25,6 +27,8 @@ class BadgesPlugin(BasePlugin):
         ("badge_js", Type(str, default="")),
         # Allow overwriting the install badge data
         ("install_badge_data", Type(str, default="")),
+        # Base link for the tag links
+        ("tag_page_link", Type(str, default="/index.html")),
     )
 
     def on_config(self, config: Config, **kwargs) -> Config:
@@ -47,6 +51,7 @@ class BadgesPlugin(BasePlugin):
         current_dir = os.path.dirname(__file__)
         install_badge_data_path = self.config["install_badge_data"] or INSTALL_BADGE_DATA
         self.install_badge_manager = InstallBadgeManager(install_badge_data_path)
+        self.tag_badge_manager = TagBadgeManager(self.config["tag_page_link"])
 
         return config
 
@@ -58,7 +63,8 @@ class BadgesPlugin(BasePlugin):
         try:
             if self.config["enabled"]:
                 file_name = page.file.src_path
-                markdown = replace_badges(file_name, markdown, self.install_badge_manager)
+                markdown = replace_badges(file_name, markdown, self.install_badge_manager, self.tag_badge_manager)
+                self.tag_badge_manager.apply_tags_to_page(page)
             else:
                 warning("Plugin is disabled")
 

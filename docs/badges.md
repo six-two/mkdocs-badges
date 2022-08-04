@@ -1,3 +1,8 @@
+---
+hide:
+- tags
+---
+
 # Badge types
 
 There are multiple different badge types, which different syntaxes.
@@ -113,9 +118,30 @@ I|pypi|mkdocs|
 </span>
 
 
+## Tag badges
+
+!!! note "Requirements"
+    This will likely requires you to use Mkdocs Material and [enabling it's `tags` plugin](https://squidfunk.github.io/mkdocs-material/setup/setting-up-tags/).
+    I haven't tested it, but strongly assume that the badges `plugin` will need to be before the `tags` plugin to function properly.
+
+Tag badges add a tag to the page it apears on.
+The tags name is derived from the badge's values.
+Clicking the badge should open the tags list page at the location where all pages with this tag are listed (assuming ``)
+
+For example the following badge would add the `programming_language_python` tag:
+```
+T|Programming language|Python|
+```
+
+<span class=result>
+T|Programming language|Python|
+</span>
+
+
+
 ## Custom badges
 
-Custom badges offer all features supported by the other badge types.
+Custom badges offer all features supported by the other badge types (except tag badges).
 They have however a more verbose syntax.
 On the upside you are in total control about the supplied values, since none of them are automaticaly generated.
 

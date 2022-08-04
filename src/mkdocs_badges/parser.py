@@ -28,7 +28,7 @@ class ParsedBadge:
         self.copy_text = copy_text or None
         self.link = link or None
         self.reflink = reflink or None
-        # Sort the class names to maye equality checks easier
+        # Sort the class names to make equality checks easier
         self.html_classes = list(sorted(html_classes or []))
 
     def check_fields(self) -> None:

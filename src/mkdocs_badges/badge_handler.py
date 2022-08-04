@@ -1,4 +1,7 @@
+import re
 from urllib.parse import urlparse
+
+from mkdocs_badges.tag_badge import TagBadgeManager
 # local files
 from . import warning
 from .parser import ParsedBadge, BadgeException, FileParser
@@ -9,27 +12,29 @@ LINK_BADGE_EMPTY_FIELDS = ["copy_text", "link", "reflink"]
 REFLINK_BADGE_EMPTY_FIELDS = LINK_BADGE_EMPTY_FIELDS
 INSTALL_BADGE_EMPTY_FIELDS = LINK_BADGE_EMPTY_FIELDS
 COPY_BADGE_EMPTY_FIELDS = LINK_BADGE_EMPTY_FIELDS
+TAG_BADGE_EMPTY_FIELDS = LINK_BADGE_EMPTY_FIELDS
 STRIP_SUBDOMAINS = [
     "www", # Pretty standard prefix for websites
     "m", # Pretty standard for mobile sites
 ]
 
-def replace_badges(file_name: str, markdown: str, install_badge_manager: InstallBadgeManager) -> str:
+def replace_badges(file_name: str, markdown: str, *args) -> str:
     lines = markdown.split("\n")
     for parser_result_entry in FileParser(file_name, lines).process():
         index = parser_result_entry.line_index
         badge = parser_result_entry.parsed_badge
         try:
-            lines[index] = format_badge(badge, install_badge_manager)
+            lines[index] = format_badge(badge, *args)
         except BadgeException as error:
             warning(f"[{file_name}:{index+1}] Processing error: {error}")
     
     return "\n".join(lines)
 
 
-def format_badge(badge: ParsedBadge, install_badge_manager: InstallBadgeManager) -> str:
+def format_badge(badge: ParsedBadge, install_badge_manager: InstallBadgeManager, tag_badge_manager: TagBadgeManager) -> str:
     badge.check_fields()
     typ = badge.badge_type
+
     if not typ:
         # TODO: Make it possible to use copy_text and reflink at the same time
         if badge.reflink:
@@ -62,6 +67,10 @@ def format_badge(badge: ParsedBadge, install_badge_manager: InstallBadgeManager)
         badge.assert_all_empty(COPY_BADGE_EMPTY_FIELDS)
         classes = ["badge-copy", *badge.html_classes]
         return generate_badge_html(badge.title, badge.value, copy_text=badge.value, extra_classes=classes)
+
+    elif typ == "T":
+        badge.assert_all_empty(TAG_BADGE_EMPTY_FIELDS)
+        return tag_badge_manager.format_badge(badge)
 
     else:
         raise BadgeException(f"Unknown badge type '{typ}'")

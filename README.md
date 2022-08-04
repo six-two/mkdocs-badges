@@ -35,6 +35,10 @@ pip install . && python -m unittest
 
 ## Notable changes
 
+### Version 0.3.3
+
+- Added tags badges
+
 ### Version 0.3.1
 
 - Better error handling, fixed a crash

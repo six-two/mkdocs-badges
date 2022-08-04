@@ -65,3 +65,12 @@ R|reflink badge|example_ref|
 
 [example_ref]: https://www.example.com
 
+
+### Tag badges
+
+T|tag|value|
+T|special!%#|chars__in.value*()|
+
+## Tags list
+
+[TAGS]

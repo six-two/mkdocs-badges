@@ -9,7 +9,10 @@ nav:
 
 plugins:
 - search
-- badges
+- badges:
+    tag_page_link: /test/
+- tags:
+    tags_file: test.md
 
 extra_css:
 - assets/stylesheets/custom.css
