@@ -1,12 +1,11 @@
-import re
 from urllib.parse import urlparse
 
-from mkdocs_badges.tag_badge import TagBadgeManager
 # local files
 from . import warning
 from .parser import ParsedBadge, BadgeException, FileParser
 from .badge_html import generate_badge_html
 from .install_badge import InstallBadgeManager
+from .tag_badge import TagBadgeManager
 
 LINK_BADGE_EMPTY_FIELDS = ["copy_text", "link", "reflink"]
 REFLINK_BADGE_EMPTY_FIELDS = LINK_BADGE_EMPTY_FIELDS

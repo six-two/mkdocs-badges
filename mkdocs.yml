@@ -1,5 +1,8 @@
 site_name: mkdocs-badges
 
+theme:
+  name: material
+
 nav:
 # Hide the index page -> would otherwise result in two mkdocs-badges links
 - "": index.md

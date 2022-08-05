@@ -1,6 +1,4 @@
-import html
 import json
-from typing import NamedTuple, Optional
 # local files
 from . import warning
 from .badge_html import generate_badge_html

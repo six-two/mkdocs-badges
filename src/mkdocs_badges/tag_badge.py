@@ -1,11 +1,7 @@
-import html
-import json
 import re
-from typing import NamedTuple, Optional
 # pip
 from mkdocs.structure.pages import Page
 # local files
-from . import warning
 from .badge_html import generate_badge_html
 from .parser import ParsedBadge
 
@@ -31,14 +27,13 @@ def get_tag_name(title: str, value: str) -> str:
 class TagBadgeManager:
     def __init__(self, tag_page_link: str) -> None:
         self.tag_page_link = tag_page_link
-        self.tags = set()
+        self.tags: set[str] = set()
 
     def apply_tags_to_page(self, page: Page) -> None:
         """
         This adds the tags to the given page and clear the lost of stored tags afterwards (so that you can reuse the object)
         """
         if self.tags:
-            warning("Debug:")
             # Get the new tags
             new_tags = sorted(list(self.tags))
 

@@ -1,8 +1,3 @@
----
-tags:
-- test
----
-
 # mkdocs-badges
 
 I|github|six-two/mkdocs-badges|

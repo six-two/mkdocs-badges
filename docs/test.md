@@ -73,4 +73,6 @@ T|special!%#|chars__in.value*()|
 
 ## Tags list
 
+<!-- For some reason the tags defined on this page do not appear on this page. @TODO investigate -->
+
 [TAGS]

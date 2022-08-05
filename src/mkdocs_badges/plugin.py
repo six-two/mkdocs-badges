@@ -1,4 +1,3 @@
-import os
 # pip dependency
 import mkdocs
 from mkdocs.config.config_options import Type
@@ -6,13 +5,12 @@ from mkdocs.plugins import BasePlugin
 from mkdocs.config.base import Config
 from mkdocs.structure.pages import Page
 from mkdocs.structure.files import Files
-
-from mkdocs_badges.tag_badge import TagBadgeManager
 # local files
 from . import warning
 from .install_badge import InstallBadgeManager
 from .assets import BADGE_CSS, BADGE_JS, INSTALL_BADGE_DATA, copy_asset_if_target_file_does_not_exist
 from .badge_handler import replace_badges
+from .tag_badge import TagBadgeManager
 
 DEFAULT_BADGE_CSS_PATH = "assets/stylesheets/badge.css"
 DEFAULT_BADGE_JS_PATH = "assets/javascripts/badge.js"
@@ -48,7 +46,6 @@ class BadgesPlugin(BasePlugin):
             extra_js.append(badge_js_path)
 
         # Load the install badge data from the data file
-        current_dir = os.path.dirname(__file__)
         install_badge_data_path = self.config["install_badge_data"] or INSTALL_BADGE_DATA
         self.install_badge_manager = InstallBadgeManager(install_badge_data_path)
         self.tag_badge_manager = TagBadgeManager(self.config["tag_page_link"])
