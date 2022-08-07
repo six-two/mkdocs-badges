@@ -27,6 +27,11 @@ a.badge:hover,
     border-top-left-radius: var(--md-badge-rounded-size);
 }
 
+.badge.badge-single .title {
+    border-bottom-right-radius: var(--md-badge-rounded-size);
+    border-top-right-radius: var(--md-badge-rounded-size);
+}
+
 .badge .value {
     color: var(--md-badge-text-color);
     padding: var(--md-badge-padding-size);

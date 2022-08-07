@@ -71,8 +71,27 @@ R|reflink badge|example_ref|
 T|tag|value|
 T|special!%#|chars__in.value*()|
 
-## Tags list
+
+#### Tags list
 
 <!-- For some reason the tags defined on this page do not appear on this page. @TODO investigate -->
 
 [TAGS]
+
+
+### Single element badges
+
+S|Reference link||reflink:example_ref|
+
+Should cause an error:
+S|||
+
+S|Should cause|an error|
+
+S|Should cause an error||c:error|l:error|
+
+S|Should cause an error||c:error|r:example_ref|
+
+S||This is a <img src="/assets/img/test.png" width=50 height=15>|
+
+

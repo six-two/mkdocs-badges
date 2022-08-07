@@ -3,7 +3,7 @@ from urllib.parse import urlparse
 # local files
 from . import warning
 from .parser import ParsedBadge, BadgeException, FileParser
-from .badge_html import generate_badge_html
+from .badge_html import generate_badge_html, generate_single_element_badge_html
 from .install_badge import InstallBadgeManager
 from .tag_badge import TagBadgeManager
 
@@ -70,6 +70,13 @@ def format_badge(badge: ParsedBadge, install_badge_manager: InstallBadgeManager,
     elif typ == "T":
         badge.assert_all_empty(TAG_BADGE_EMPTY_FIELDS)
         return tag_badge_manager.format_badge(badge)
+
+    elif typ == "S":
+        classes = ["badge-single", *badge.html_classes]
+        badge_html = generate_single_element_badge_html(badge.title, copy_text=badge.copy_text, link=badge.link, extra_classes=classes)
+        if badge.reflink:
+            badge_html = f"[{badge_html}][{badge.reflink}]"
+        return badge_html
 
     else:
         raise BadgeException(f"Unknown badge type '{typ}'")

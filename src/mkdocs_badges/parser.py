@@ -32,10 +32,27 @@ class ParsedBadge:
         self.html_classes = list(sorted(html_classes or []))
 
     def check_fields(self) -> None:
-        if not self.title:
-            raise BadgeException("No title set")
-        if not self.value:
-            raise BadgeException("No value set")
+        if self.badge_type == "S":
+            # Special case handling of single value badges, which only contain either a title or a value
+            if self.title and self.value:
+                raise BadgeException("Single value badges can not contain both a title and a value")
+            elif not self.title and not self.value:
+                raise BadgeException("Single value batch needs to contain either a title or a value")
+
+            # Normalize values: store data in title, leave value empty
+            self.title = self.title or self.value
+            self.value = ""
+
+            # Check for other mutually exclusive attributes
+            if self.copy_text and (self.link or self.reflink):
+                raise BadgeException("Single value badges can not contain both a link and a text to copy")
+
+        else:
+            # Normal badges, should contain both title and value
+            if not self.title:
+                raise BadgeException("No title set")
+            if not self.value:
+                raise BadgeException("No value set")
         
         if self.link and self.reflink:
             raise BadgeException("Mutually exclusive fields 'link' and 'reflink' set")

@@ -138,6 +138,28 @@ T|Programming language|Python|
 </span>
 
 
+## Single element badge
+
+This badge only contains a single element (the title) and has no second element (the value).
+The same extra attributes that can be set for custom badges can anlo be used here.
+However, you can not use a (ref-)link and a text to copy for the same badge, since only one element exists.
+
+For example the following badge would add the `programming_language_python` tag:
+```
+S|Single element badge||
+S||You can also define the value here|
+S|Single element with link||link:https://example.com|
+S|Single element with text to copy||copy:single element|
+```
+
+<span class=result>
+S|Single element badge||
+S||You can also define the value here|
+S|Single element with link||link:https://example.com|
+S|Single element with text to copy||copy:single element|
+</span>
+
+
 
 ## Custom badges
 

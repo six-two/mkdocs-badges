@@ -34,6 +34,14 @@ def generate_badge_html(badge_type: str, badge_value: str, copy_text: Optional[s
     return element(inner_html, outer_classes, link=outer_link, copy_text=outer_copy)
 
 
+def generate_single_element_badge_html(badge_type: str, copy_text: Optional[str] = None, link: Optional[str] = None, extra_classes: list[str] = []) -> str:
+    title_html = element(badge_type, ["title"])
+
+    inner_html = START + title_html + END
+    outer_classes = ["badge", *extra_classes]
+    return element(inner_html, outer_classes, link=link, copy_text=copy_text)
+
+
 def element(value: str, class_list: list[str], link: Optional[str] = None, copy_text: Optional[str] = None) -> str:
     if link and copy_text:
         raise Exception("You can not specify both link and copy_text")
