@@ -11,6 +11,8 @@ Badges inside (fenced) code bocks are also not interpreted.
 
 ## Simple badges
 
+|Required version|0.3.0+|link:https://github.com/six-two/mkdocs-badges#notable-changes|.version|
+
 Simple badges are just a badge that does not react to clicks.
 
 Example markdown:
@@ -27,6 +29,8 @@ Result:
 
 
 ## Link badges
+
+|Required version|0.3.0+|link:https://github.com/six-two/mkdocs-badges#notable-changes|.version|
 
 Link badges link to a given URL.
 They only have the (simplified version of) the hostname specified in the link as visible value
@@ -46,6 +50,8 @@ L|Simplified hostname demo|https://www.example.com|
 </div>
 
 ## Reference link badges
+
+|Required version|0.3.0+|link:https://github.com/six-two/mkdocs-badges#notable-changes|.version|
 
 Reference link badges link to a given URL using reference links.
 They are similar to link badges, but display the reference name as value.
@@ -74,6 +80,8 @@ R|reflink badge|example_ref|
 
 ## Copy badges
 
+|Required version|0.3.0+|link:https://github.com/six-two/mkdocs-badges#notable-changes|.version|
+
 Copy badges copy their value to the users clipboard when clicked upon
 
 Example markdown:
@@ -92,6 +100,8 @@ C|Linux check ethernet settings|ip a s eth0|
 
 
 ## Install badges
+
+|Required version|0.3.0+|link:https://github.com/six-two/mkdocs-badges#notable-changes|.version|
 
 Install badges are designed to make it easy for users to install software.
 Sadly they are a bit unintuitive to use.
@@ -120,6 +130,8 @@ I|pypi|mkdocs|
 
 ## Tag badges
 
+|Required version|0.3.3+|link:https://github.com/six-two/mkdocs-badges#notable-changes|.version|
+
 !!! note "Requirements"
     This will likely requires you to use Mkdocs Material and [enabling it's `tags` plugin](https://squidfunk.github.io/mkdocs-material/setup/setting-up-tags/).
     I haven't tested it, but strongly assume that the badges `plugin` will need to be before the `tags` plugin to function properly.
@@ -138,10 +150,48 @@ T|Programming language|Python|
 </span>
 
 
+## Custom badges
+
+|Required version|0.3.0+|link:https://github.com/six-two/mkdocs-badges#notable-changes|.version|
+
+Custom badges offer all features supported by the other badge types (except tag badges).
+They have however a more verbose syntax.
+On the upside you are in total control about the supplied values, since none of them are automaticaly generated.
+
+Short prefix | Long prefix | Conflicts with | Description
+--- | --- | --- | ---
+`.` | `class:` | - | Add a class to the badge, which can be used for custom styling. Can be specified multiple time to add multiple classes. Can also be used with any other badge type
+`c:` | `copy:` | reflink | Copy the given text when the badge is clicked
+`l:` | `link:` | reflink | Clicking on the badge will direct the user to the given URL
+`r:` | `reflink:` | copy, link | Similar to link, but instead it uses the reference link syntax
+
+Example markdown:
+
+```markdown
+|Link badge equivalent|example.com|link:https://www.example.com|
+|Copy badge equivalent|text to show|copy:text to copy|
+|Styled differently|by custom HTML classes|class:version|
+|Install badge equivalent|mkdocs-badge|link:https://github.com/six-two/mkdocs-badges|copy:git clone https://github.com/six-two/mkdocs-badges.git|
+|Reflink badge equivalent|example.com|r:example_ref|
+```
+
+Result:
+
+<span class=result>
+|Link badge equivalent|example.com|link:https://www.example.com|
+|Copy badge equivalent|text to show|copy:text to copy|
+|Styled differently|by custom HTML classes|class:version|
+|Install badge equivalent|mkdocs-badge|link:https://github.com/six-two/mkdocs-badges|copy:git clone https://github.com/six-two/mkdocs-badges.git|
+|Reflink badge equivalent|example.com|r:example_ref|
+</span>
+
+
 ## Single element badge
 
+|Required version|0.3.4+|link:https://github.com/six-two/mkdocs-badges#notable-changes|.version|
+
 This badge only contains a single element (the title) and has no second element (the value).
-The same extra attributes that can be set for custom badges can anlo be used here.
+The same extra attributes that can be set for custom badges can also be used here.
 However, you can not use a (ref-)link and a text to copy for the same badge, since only one element exists.
 
 For example the following badge would add the `programming_language_python` tag:
@@ -160,37 +210,6 @@ S|Single element with text to copy||copy:single element|
 </span>
 
 
-
-## Custom badges
-
-Custom badges offer all features supported by the other badge types (except tag badges).
-They have however a more verbose syntax.
-On the upside you are in total control about the supplied values, since none of them are automaticaly generated.
-
-Short prefix | Long prefix | Conflicts with | Description
---- | --- | --- | ---
-`.` | `class:` | - | Add a class to the badge, which can be used for custom styling. Can be specified multiple time to add multiple classes. Can also be used with any other badge type
-`c:` | `copy:` | reflink | Copy the given text when the badge is clicked
-`l:` | `link:` | reflink | Clicking on the badge will direct the user to the given URL
-`r:` | `reflink:` | copy, link | Similar to link, but instead it uses the reference link syntax
-
-Example markdown:
-
-```markdown
-|Link badge equivalent|example.com|link:https://www.example.com|
-|Copy badge equivalent|text to show|copy:text to copy|
-|Install badge equivalent|mkdocs-badge|link:https://github.com/six-two/mkdocs-badges|copy:git clone https://github.com/six-two/mkdocs-badges.git|
-|Reflink badge equivalent|example.com|r:example_ref|
-```
-
-Result:
-
-<span class=result>
-|Link badge equivalent|example.com|link:https://www.example.com|
-|Copy badge equivalent|text to show|copy:text to copy|
-|Install badge equivalent|mkdocs-badge|link:https://github.com/six-two/mkdocs-badges|copy:git clone https://github.com/six-two/mkdocs-badges.git|
-|Reflink badge equivalent|example.com|r:example_ref|
-</span>
 
 <!-- Link references -->
 [example_ref]: https://www.example.com

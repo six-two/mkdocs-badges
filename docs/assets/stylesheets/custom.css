@@ -8,10 +8,18 @@
 }
 
 .result .badge {
-    margin-bottom: 5px;
+    margin-bottom: 7px;
 }
 
 .badge img {
     padding: 0px;
     border: 0px;
+}
+
+.badge.version .title {
+    background-color: black;
+}
+
+.badge.version .value {
+    background-color: green;
 }
