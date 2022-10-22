@@ -10,7 +10,7 @@ from mkdocs.structure.files import Files
 from . import warning
 from .install_badge import InstallBadgeManager
 from .assets import BADGE_CSS, BADGE_JS, INSTALL_BADGE_DATA, copy_asset_if_target_file_does_not_exist
-from .badge_handler import replace_badges
+from .badge_handler import replace_badges, replace_placeholders_after_markdown_parsing
 from .tag_badge import TagBadgeManager
 
 DEFAULT_BADGE_CSS_PATH = "assets/stylesheets/badge.css"
@@ -79,3 +79,10 @@ class BadgesPlugin(BasePlugin[BadgesPluginConfig]):
 
         badge_js_path = self.config.badge_js or DEFAULT_BADGE_JS_PATH
         copy_asset_if_target_file_does_not_exist(output_dir, badge_js_path, BADGE_JS)
+
+    def on_page_content(self, html: str, page: Page, config: MkDocsConfig, files) -> str:
+        """
+        From the docs (https://mkdocs-origin.readthedocs.io/en/latest/user-guide/plugins/#page-events):
+        The page_content event is called after the Markdown text is rendered to HTML (but before being passed to a template) and can be used to alter the HTML body of the page.
+        """
+        return replace_placeholders_after_markdown_parsing(html)
