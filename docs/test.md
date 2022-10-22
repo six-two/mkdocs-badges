@@ -22,6 +22,15 @@ I|pypi|mkdocs|
 
 |image small|<img src="/assets/img/test.png" width=50 height=15>|
 
+Images in both values:
+|<img src="/assets/img/test.png" width=50 height=15>|<img src="/assets/img/test.png" width=50 height=15>|
+
+SVG as key (see issue #2):
+|<svg width="35" height="35"><circle cx="10" cy="10" r="9" stroke="green" stroke-width="2" fill="yellow" /></svg>|circle|
+
+|circle|<svg width="15" height="15"><circle cx="7" cy="7" r="7" stroke="green" stroke-width="2" fill="yellow" /></svg>|
+
+
 
 |text contains a \| pipe symbol|value|
 
