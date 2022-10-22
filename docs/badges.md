@@ -3,11 +3,14 @@ hide:
 - tags
 ---
 
-# Badge types
+# Badges
 
 There are multiple different badge types, which different syntaxes.
 All badges need to be in their now line and have no indent / leading whitespaces.
 Badges inside (fenced) code bocks are also not interpreted.
+
+If multiple consecutive lines contain badges, they will be displayed next to each other (if space permits it).
+If you want each badge to be on it's won line, add an empty line between the badges.
 
 ## Simple badges
 

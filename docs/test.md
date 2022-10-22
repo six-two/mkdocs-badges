@@ -1,4 +1,7 @@
-# Test (please ignore me)
+# Test cases
+
+This page is meant for me to test, how some edge cases are handled.
+It is intentionally hiden from the navigation to prevent confusing users, but it can easily be found via the search.
 
 <style>
     /* For for debugging the layout  */

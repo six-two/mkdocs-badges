@@ -38,8 +38,8 @@ pip install . && python -m unittest
 ### HEAD
 
 - Now requires MkDocs 1.4 or newer
-- Switched layout from inline elements to `block` elements inside a wrapping flexbox container.
-This should better handle oversized contents (like images)
+- Updated the layout rules for badges. 
+This should better handle oversized contents (like images or very long texts).
 
 ### Version 0.3.4
 

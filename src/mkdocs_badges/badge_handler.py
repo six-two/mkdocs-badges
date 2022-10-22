@@ -16,18 +16,11 @@ STRIP_SUBDOMAINS = [
     "www", # Pretty standard prefix for websites
     "m", # Pretty standard for mobile sites
 ]
-# Sadly I can not put the HTML in directly, because then the reference link markdown would not be parsed.
-# So I insert a placeholder, let the markdown parser convert the reference links, and then replace the placeholders with the true HTML
-BADGE_GROUP_START = '<div class="badge-group">\n'
-BADGE_GROUP_END = '\n</div>'
-PLACEHOLDER_BADGE_GROUP_START = "xxxPLACEHOLDER_BADGE_GROUP_STARTxxx"
-PLACEHOLDER_BADGE_GROUP_END = "xxxPLACEHOLDER_BADGE_GROUP_ENDxxx"
-
-
-def replace_placeholders_after_markdown_parsing(page_html: str):
-    page_html = page_html.replace(PLACEHOLDER_BADGE_GROUP_START, BADGE_GROUP_START)
-    page_html = page_html.replace(PLACEHOLDER_BADGE_GROUP_END, BADGE_GROUP_END)
-    return page_html
+# > Sadly I can not put the HTML in directly, because then the reference link markdown would not be parsed.
+# > So I insert a placeholder, let the markdown parser convert the reference links, and then replace the placeholders with the true HTML
+# Actually the problem described above can be circumvented by simply using a span instead of a div
+BADGE_GROUP_START = '<span class="badge-group">\n'
+BADGE_GROUP_END = '\n</span>'
 
 
 def replace_badges(file_name: str, markdown: str, *args) -> str:
@@ -52,11 +45,11 @@ def replace_badges(file_name: str, markdown: str, *args) -> str:
         for i, line in enumerate(replaced_line_indices):
             # is first entry or is not consecutive line to previous line
             if (i == 0) or (replaced_line_indices[i-1] != line - 1):
-                lines[line] = PLACEHOLDER_BADGE_GROUP_START + lines[line]
+                lines[line] = BADGE_GROUP_START + lines[line]
 
             # is last or the next line is not consecutive
             if (i == last_i) or (replaced_line_indices[i+1] != line + 1):
-                lines[line] += PLACEHOLDER_BADGE_GROUP_END
+                lines[line] += BADGE_GROUP_END
 
         return "\n".join(lines)
     else:
