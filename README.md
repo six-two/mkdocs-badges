@@ -35,11 +35,10 @@ pip install . && python -m unittest
 
 ## Notable changes
 
-### HEAD
+### 0.4.0
 
 - Now requires MkDocs 1.4 or newer
-- Updated the layout rules for badges. 
-This should better handle oversized contents (like images or very long texts).
+- Updated the layout rules for badges. This should better handle oversized contents (like images or very long texts).
 
 ### Version 0.3.4
 

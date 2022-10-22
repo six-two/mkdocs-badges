@@ -42,8 +42,8 @@ extra_css:
 Make sure to be as specific as possible (by using `.badge.<targetclass>`) so that your styles will have a higher priority than default style.
 The elements you want to style are:
 
-- The `.title` (left side of the badge)
-- The `.value` (right side of the badge)
+- The `.title`: left side of the badge (or the whole badge, if it is a single element badge)
+- The `.value`: right side of the badge
 
 Example CSS:
 ```css
