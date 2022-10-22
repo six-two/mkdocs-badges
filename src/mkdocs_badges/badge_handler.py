@@ -2,7 +2,7 @@ from urllib.parse import urlparse
 
 # local files
 from . import warning
-from .parser import ParsedBadge, BadgeException, FileParser
+from .parser import ParsedBadge, BadgeException, FileParser, ParserResultEntry
 from .badge_html import generate_badge_html, generate_single_element_badge_html
 from .install_badge import InstallBadgeManager
 from .tag_badge import TagBadgeManager
@@ -16,18 +16,39 @@ STRIP_SUBDOMAINS = [
     "www", # Pretty standard prefix for websites
     "m", # Pretty standard for mobile sites
 ]
+BADGE_GROUP_START = '<div class="badge-group">\n'
+BADGE_GROUP_END = '\n</div>'
+
 
 def replace_badges(file_name: str, markdown: str, *args) -> str:
     lines = markdown.split("\n")
-    for parser_result_entry in FileParser(file_name, lines).process():
-        index = parser_result_entry.line_index
-        badge = parser_result_entry.parsed_badge
-        try:
-            lines[index] = format_badge(badge, *args)
-        except BadgeException as error:
-            warning(f"[{file_name}:{index+1}] Processing error: {error}")
-    
-    return "\n".join(lines)
+
+    parser_result_list = FileParser(file_name, lines).process()
+    if parser_result_list:
+        replaced_line_indices = []
+        for entry in parser_result_list:
+            try:
+                badge_html = format_badge(entry.parsed_badge, *args)
+                # Indent it a bit to make debugging it easier when viewing the page's source
+                lines[entry.line_index] = f"\t{badge_html}"
+                replaced_line_indices.append(entry.line_index)
+            except BadgeException as error:
+                warning(f"[{file_name}:{entry.line_index+1}] Processing error: {error}")
+
+        replaced_line_indices = list(sorted(replaced_line_indices))
+        last_i = len(replaced_line_indices) - 1
+        for i, line in enumerate(replaced_line_indices):
+            # is first entry or is not consecutive line to previous line
+            if (i == 0) or (replaced_line_indices[i-1] != line - 1):
+                lines[line] = BADGE_GROUP_START + lines[line]
+
+            # is last or the next line is not consecutive
+            if (i == last_i) or (replaced_line_indices[i+1] != line + 1):
+                lines[line] += BADGE_GROUP_END
+
+        return "\n".join(lines)
+    else:
+        return markdown
 
 
 def format_badge(badge: ParsedBadge, install_badge_manager: InstallBadgeManager, tag_badge_manager: TagBadgeManager) -> str:

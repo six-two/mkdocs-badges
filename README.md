@@ -35,6 +35,10 @@ pip install . && python -m unittest
 
 ## Notable changes
 
+### HEAD
+
+- Now requires MkDocs 1.4 or newer
+
 ### Version 0.3.4
 
 - Added single element badges

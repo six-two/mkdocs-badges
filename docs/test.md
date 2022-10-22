@@ -1,7 +1,12 @@
 # Test (please ignore me)
 
-This is my experimental new format (target for 0.3 release):
-(type)?|title|value|(property|)*
+<style>
+    /* For for debugging the layout  */
+    .badge-group {
+        border: 1px solid red;
+    }
+</style>
+
 
 ## Badge types without properties
 
@@ -14,20 +19,38 @@ I|pypi|mkdocs|
 
 |with properties 1|test|c:text to copy|l:https://example.com|.html-class|class:html-class2|
 
+## Layout (overflow) tests
+
+Singel tag:
+|This text is very long. This text is even longer.|This value is the longest test value on this page at this time|
+
+Long list of tags:
+|aaaaa|bbbbb|
+|ccccc|ddddd|
+|eeeee|fffff|
+|ggggg|hhhhh|
+|iiiii|jjjjj|
+|kkkkk|lllll|
+|mmmmm|nnnnn|
+|ooooo|ppppp|
+|qqqqq|rrrrr|
+|sssss|ttttt|
+|uuuuu|vvvvv|
+|wwwww|xxxxx|
+|yyyyy|zzzzz|
+|aaaaa|bbbbb|
+|ccccc|ddddd|
+|eeeee|fffff|
+|g|hhhhhh|
+|iiiii|jjjjj|
+
 ## special cases
 
 |emoji badge, should work|👍|
-
 |image too big|<img src="/assets/img/test.png">|
-
 |image small|<img src="/assets/img/test.png" width=50 height=15>|
-
-Images in both values:
 |<img src="/assets/img/test.png" width=50 height=15>|<img src="/assets/img/test.png" width=50 height=15>|
-
-SVG as key (see issue #2):
-|<svg width="35" height="35"><circle cx="10" cy="10" r="9" stroke="green" stroke-width="2" fill="yellow" /></svg>|circle|
-
+|<svg width="35" height="35"><circle cx="10" cy="10" r="9" stroke="green" stroke-width="2" fill="yellow" /></svg>|SVG as key (see issue #2)|
 |circle|<svg width="15" height="15"><circle cx="7" cy="7" r="7" stroke="green" stroke-width="2" fill="yellow" /></svg>|
 
 

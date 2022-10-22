@@ -6,7 +6,8 @@
 }
 
 .badge {
-    display: inline-block;
+    display: flex;
+    width: max-content;
     color: var(--md-badge-text-color);
     margin-right: 15px;
     margin-bottom: 15px;
@@ -17,6 +18,16 @@ a.badge:hover,
 .badge-reflink:hover {
     text-decoration: underline;
     color: var(--md-badge-text-color);
+}
+
+.badge-group {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.badge .title, .badge .value {
+    display: block;
+    width: max-content;
 }
 
 .badge .title {
