@@ -27,7 +27,6 @@ a.badge:hover,
 
 .badge .title, .badge .value {
     display: block;
-    width: max-content;
 }
 
 .badge .title {

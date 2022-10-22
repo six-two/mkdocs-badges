@@ -44,6 +44,14 @@ Long list of tags:
 |g|hhhhhh|
 |iiiii|jjjjj|
 
+Overlong element in long list:
+|aaaaa|bbbbb|
+|This text is very long. This text is even longer.|This value is the longest test value on this page at this time|
+|ccccc|ddddd|
+|eeeee|fffff|
+|ggggg|hhhhh|
+
+
 ## special cases
 
 |emoji badge, should work|👍|
@@ -52,6 +60,8 @@ Long list of tags:
 |<img src="/assets/img/test.png" width=50 height=15>|<img src="/assets/img/test.png" width=50 height=15>|
 |<svg width="35" height="35"><circle cx="10" cy="10" r="9" stroke="green" stroke-width="2" fill="yellow" /></svg>|SVG as key (see issue #2)|
 |circle|<svg width="15" height="15"><circle cx="7" cy="7" r="7" stroke="green" stroke-width="2" fill="yellow" /></svg>|
+|Very large image|<svg width="100" height="100"><circle cx="50" cy="50" r="48" stroke="red" stroke-width="2" fill="orange" /></svg>|
+
 
 
 
