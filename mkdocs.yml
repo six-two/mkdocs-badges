@@ -8,6 +8,7 @@ nav:
 - "": index.md
 - setup.md
 - badges.md
+- styling.md
 - migration.md
 
 plugins:
@@ -16,6 +17,12 @@ plugins:
     tag_page_link: /test/
 - tags:
     tags_file: test.md
+
+# SEE https://squidfunk.github.io/mkdocs-material/reference/admonitions/
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
 
 extra_css:
 - assets/stylesheets/custom.css
