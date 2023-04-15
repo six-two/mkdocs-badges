@@ -1,7 +1,6 @@
-# Test cases
+# Tests: Basic
 
 This page is meant for me to test, how some edge cases are handled.
-It is intentionally hiden from the navigation to prevent confusing users, but it can easily be found via the search.
 
 <style>
     /* For for debugging the layout  */
@@ -70,11 +69,8 @@ Overlong element in long list:
 
 |text contains a \| pipe symbol|value|
 
-|missing value, should not be rendered|
 
-I|missing value|should not be rendered
-
-Since this format matches the markdown tables format, I need to make sure that no header comes before ant of my values
+Since this format matches the markdown tables format, I need to make sure that no header comes before any of my values
 
 |Markdown|Table|
 |---|---|
@@ -83,24 +79,6 @@ table row without outer pipes|should not be parsed
 
 |not part of the table|should be parsed|
 
-And code blocks should also not be parsed:
-
-```
-|fenced code|should not be parsed|
-```
-
-    |indented code|should not be parsed|
-
-X|invalid type|should not be parsed|
-xyz|invalid type|should not be parsed|
-
-|trailing stuff|should not be parsed|trailing
-
-|repeated attribute|should not be parsed|c:text to copy|c:https://example.com||c:html-class2|
-
-||Badge with empty title, should fail|
-
-|Badge with empty value, should fail||
 
 ### Reflink badges
 
@@ -117,25 +95,9 @@ T|tag|value|
 T|special!%#|chars__in.value*()|
 
 
-#### Tags list
-
-<!-- For some reason the tags defined on this page do not appear on this page. @TODO investigate -->
-
-[TAGS]
-
-
 ### Single element badges
 
 S|Reference link||reflink:example_ref|
-
-Should cause an error:
-S|||
-
-S|Should cause|an error|
-
-S|Should cause an error||c:error|l:error|
-
-S|Should cause an error||c:error|r:example_ref|
 
 S||This is a <img src="/assets/img/test.png" width=50 height=15>|
 

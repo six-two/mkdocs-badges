@@ -1,0 +1,4 @@
+# dependencies for the documentation (excluding the plugin itself)
+# Version pinning is used to prevent accidentially breaking it, you con probably use whatever version you like to use, as long as it is somewhat recent
+mkdocs>=1.4
+mkdocs-material

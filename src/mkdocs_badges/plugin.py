@@ -1,7 +1,7 @@
 # pip dependency
 import mkdocs
 from mkdocs.config.config_options import Type
-from mkdocs.plugins import BasePlugin
+from mkdocs.plugins import BasePlugin, event_priority
 from mkdocs.config.base import Config
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.structure.pages import Page
@@ -52,6 +52,9 @@ class BadgesPlugin(BasePlugin[BadgesPluginConfig]):
 
         return config
 
+    # @event_priority(50)
+    # Earlier than most other plugins to update the tags properly. Did not work
+    # SEE https://www.mkdocs.org/dev-guide/plugins/#event-priorities
     def on_page_markdown(self, markdown: str, page: Page, config: MkDocsConfig, files: Files) -> str:
         """
         The page_markdown event is called after the page's markdown is loaded from file and can be used to alter the Markdown source text. The meta- data has been stripped off and is available as page.meta at this point.

@@ -2,7 +2,9 @@ site_name: mkdocs-badges
 
 theme:
   name: material
-
+  features:
+    - content.code.copy
+    - navigation.footer
 nav:
 # Hide the index page -> would otherwise result in two mkdocs-badges links
 - "": index.md
@@ -10,13 +12,18 @@ nav:
 - badges.md
 - styling.md
 - migration.md
+- Tests:
+  - test/basic.md
+  - test/install.md
+  - test/invalid.md
+  - test/tags.md
 
 plugins:
 - search
 - badges:
-    tag_page_link: /test/
+    tag_page_link: /test/tags/
 - tags:
-    tags_file: test.md
+    tags_file: test/tags.md
 
 # SEE https://squidfunk.github.io/mkdocs-material/reference/admonitions/
 markdown_extensions:
