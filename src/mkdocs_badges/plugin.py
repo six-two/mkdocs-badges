@@ -1,7 +1,7 @@
 # pip dependency
 import mkdocs
-from mkdocs.config.config_options import Type
-from mkdocs.plugins import BasePlugin, event_priority
+from mkdocs.config.config_options import Type, ExtraScriptValue
+from mkdocs.plugins import BasePlugin # , event_priority
 from mkdocs.config.base import Config
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.structure.pages import Page
@@ -29,7 +29,7 @@ class BadgesPluginConfig(Config):
 
 
 class BadgesPlugin(BasePlugin[BadgesPluginConfig]):
-    def on_config(self, config: MkDocsConfig, **kwargs) -> Config:
+    def on_config(self, config: MkDocsConfig, **kwargs) -> MkDocsConfig:
         """
         Called once when the config is loaded.
         It will make modify the config and initialize this plugin.
@@ -40,7 +40,13 @@ class BadgesPlugin(BasePlugin[BadgesPluginConfig]):
         if badge_css_path not in extra_css:
             extra_css.append(badge_css_path)
 
-        badge_js_path = self.config.badge_js or DEFAULT_BADGE_JS_PATH
+        badge_js_path = ExtraScriptValue(self.config.badge_js or DEFAULT_BADGE_JS_PATH)
+        # @TODO: Are we allowed to do this programmatically / is the new API stable? Requires MkDocs >= 1.5
+        # SEE https://github.com/mkdocs/mkdocs/blob/2865b0fcc4dd9b636963a8fd7e306725e1ac8ab2/mkdocs/config/config_options.py#L925
+        # Async should be fine, since the script will only copy text and show a popup after the user clicks on a badge.
+        # And usually users are slower than the Internet / loading a script from cache :)
+        badge_js_path.async_ = True
+        
         extra_js = config.extra_javascript
         if badge_js_path not in extra_js:
             extra_js.append(badge_js_path)
