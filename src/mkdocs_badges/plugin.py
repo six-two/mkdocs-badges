@@ -22,6 +22,8 @@ class BadgesPluginConfig(Config):
     # Options to allow overwriting CSS and/or JS files
     badge_css = Type(str, default="")
     badge_js = Type(str, default="")
+    # Load script as async? You can deactivate it if it causes trouble
+    async_ = Type(bool, default=True)
     # Allow overwriting the install badge data
     install_badge_data = Type(str, default="")
     # Base link for the tag links
@@ -41,11 +43,8 @@ class BadgesPlugin(BasePlugin[BadgesPluginConfig]):
             extra_css.append(badge_css_path)
 
         badge_js_path = ExtraScriptValue(self.config.badge_js or DEFAULT_BADGE_JS_PATH)
-        # @TODO: Are we allowed to do this programmatically / is the new API stable? Requires MkDocs >= 1.5
-        # SEE https://github.com/mkdocs/mkdocs/blob/2865b0fcc4dd9b636963a8fd7e306725e1ac8ab2/mkdocs/config/config_options.py#L925
-        # Async should be fine, since the script will only copy text and show a popup after the user clicks on a badge.
-        # And usually users are slower than the Internet / loading a script from cache :)
-        badge_js_path.async_ = True
+        if self.config.async_:
+            badge_js_path.async_ = True
         
         extra_js = config.extra_javascript
         if badge_js_path not in extra_js:

@@ -35,7 +35,12 @@ pip install . && python -m unittest
 
 ## Notable changes
 
-### 0.4.0
+### Version 0.4.1
+
+- Now requires MkDocs 1.5 or newer
+- The included script is now marked as `async` by default, maybe improving loading times a tiny bit. This can be disabled by adding `async: False` to the plugin config in your `mkdocs.yml`
+
+### Version 0.4.0
 
 - Now requires MkDocs 1.4 or newer
 - Updated the layout rules for badges. This should better handle oversized contents (like images or very long texts).

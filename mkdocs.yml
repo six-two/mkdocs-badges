@@ -22,6 +22,7 @@ plugins:
 - search
 - badges:
     tag_page_link: /test/tags/
+    # async: False
 - tags:
     tags_file: test/tags.md
 
