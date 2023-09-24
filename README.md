@@ -35,7 +35,7 @@ pip install . && python -m unittest
 
 ## Notable changes
 
-### HEAD
+### Version 0.4.2
 
 - Detect markdown tables even if they have only a single dash in the header. Fixes [#4](https://github.com/six-two/mkdocs-badges/issues/4)
 - Option to disable warnings (use this at your own risk) by adding `disable_warnings: True` to the plugin config in your `mkdocs.yml`
