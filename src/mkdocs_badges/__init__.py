@@ -2,9 +2,15 @@ import logging
 
 # Set up a logger for my code to use
 LOGGER = logging.getLogger("mkdocs.plugins.badges")
+_WARNINGS_ENABLED = True
+
+def disable_warnings() -> None:
+    global _WARNINGS_ENABLED
+    _WARNINGS_ENABLED = False
 
 def warning(message: str) -> None:
-    LOGGER.warning(f"[badges] {message}")
+    if _WARNINGS_ENABLED:
+        LOGGER.warning(f"[badges] {message}")
 
 # Import local files in the correct order
 # from .utils import replace_regex_matches

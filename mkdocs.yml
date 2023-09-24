@@ -13,7 +13,7 @@ nav:
 - badges.md
 - styling.md
 - migration.md
-- Tests:
+- "Tests":
   - test/basic.md
   - test/install.md
   - test/invalid.md
@@ -24,6 +24,7 @@ plugins:
 - badges:
     tag_page_link: /test/tags/
     # async: False
+    # disable_warnings: True
 - tags:
     tags_file: test/tags.md
 

@@ -12,3 +12,8 @@ pip install .
 
 # Vercel prefers outputs to be in public/
 mkdocs build -d public
+
+if [[ -n "$1" ]]; then
+    echo "[*] Starting web server on 127.0.0.1:$1"
+    python3 -m http.server --bind 127.0.0.1 --directory public "$1"
+fi

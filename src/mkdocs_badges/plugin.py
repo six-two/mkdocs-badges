@@ -7,7 +7,7 @@ from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.structure.pages import Page
 from mkdocs.structure.files import Files
 # local files
-from . import warning
+from . import warning, disable_warnings
 from .install_badge import InstallBadgeManager
 from .assets import BADGE_CSS, BADGE_JS, INSTALL_BADGE_DATA, copy_asset_if_target_file_does_not_exist
 from .badge_handler import replace_badges
@@ -28,6 +28,8 @@ class BadgesPluginConfig(Config):
     install_badge_data = Type(str, default="")
     # Base link for the tag links
     tag_page_link = Type(str, default="/index.html")
+    # Disable warnings, do this at your own risk
+    disable_warnings = Type(bool, default=False)
 
 
 class BadgesPlugin(BasePlugin[BadgesPluginConfig]):
@@ -36,6 +38,9 @@ class BadgesPlugin(BasePlugin[BadgesPluginConfig]):
         Called once when the config is loaded.
         It will make modify the config and initialize this plugin.
         """
+        if self.config.disable_warnings:
+            disable_warnings()
+
         # Make sure that the CSS and JS badge files are included on every page
         badge_css_path = self.config.badge_css or DEFAULT_BADGE_CSS_PATH
         extra_css = config.extra_css

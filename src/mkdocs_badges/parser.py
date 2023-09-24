@@ -100,7 +100,9 @@ class ParserResultEntry(NamedTuple):
     line_index: int
     parsed_badge: ParsedBadge
 
-TABLE_CELL_REGEX = r"\s*:?---+:?\s*" # Optional whitespace, optional alignment, at least three dashes, optional alignment, optional whitespace
+# Optional whitespace, optional alignment, at least three dashes, optional alignment, optional whitespace
+# Update from #4: It seems to be possible to just use a single dash
+TABLE_CELL_REGEX = r"\s*:?-+:?\s*"
 TABLE_HEADER_REGEX = re.compile(r"^\s*\|?"+ TABLE_CELL_REGEX + r"(\|" + TABLE_CELL_REGEX + ")+\|?\s*$")
 
 CLASS_ATTR_REGEX = re.compile(r"^(?:\.|(?:class:))(.*)$")

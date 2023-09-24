@@ -8,11 +8,27 @@
 
 I|missing value|should not be rendered
 
+## Tables
 
 |Markdown|Table|
 |---|---|
 |table rows|should not be parsed|
 table row without outer pipes|should not be parsed
+
+Problematic table from [#4](https://github.com/six-two/mkdocs-badges/issues/4):
+
+| 🔗 | information (count) | grouping |
+| - | ------------------- | :------: |
+| [🔗](#foo) | server |
+
+Same table with three dashes:
+
+| 🔗 | information (count) | grouping |
+| --- | ------------------- | :------: |
+| [🔗](#foo) | server |
+
+
+## Code blocks
 
 And code blocks should also not be parsed:
 
@@ -21,6 +37,8 @@ And code blocks should also not be parsed:
 ```
 
     |indented code|should not be parsed|
+
+## Other invalid stuff
 
 X|invalid type|should not be parsed|
 xyz|invalid type|should not be parsed|
