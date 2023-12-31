@@ -32,6 +32,11 @@ You can run them against the current code with the following command (issued in 
 pip install . && python -m unittest
 ```
 
+## Known issues
+
+- At least on iPhones (which only support Safari based engines) only one toast can be shown.
+    After that you need to reload the page to show the same toast again or to show another toast.
+    This seems to be an issue with <https://github.com/mlcheng/js-toast/> (used in `src/mkdocs_badges/assets/badge.js`) which seems no longer maintained.
 
 ## Notable changes
 
