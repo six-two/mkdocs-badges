@@ -6,7 +6,7 @@ hide:
 # Badges
 
 There are multiple different badge types, which different syntaxes.
-All badges need to be in their now line and have no indent / leading whitespaces.
+All badges need to be in their now line and have no indent / leading whitespace.
 Badges inside (fenced) code bocks are also not interpreted.
 
 If multiple consecutive lines contain badges, they will be displayed next to each other (if space permits it).

@@ -3,16 +3,16 @@
 # Thus I didn't bother setting up stuff like venv here ;)
 
 # Switch to the directory of this file
-cd "$( dirname "${BASH_SOURCE[0]}" )"
+cd "$( dirname "${BASH_SOURCE[0]}" )" || exit
 
 # install the dependencies
 pip install -r requirements.txt
 
 if [[ -z "$DEPLOY_STABLE" ]]; then
-    # install the latest (dev) version of this package
+    echo "[*] Compiling current development version of this plugin"
     pip install .
 else
-    # Install the latest published version
+    echo "[*] Downloading latest released version of this plugin"
     pip install -U mkdocs-badges
 fi
 

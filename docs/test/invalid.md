@@ -43,6 +43,8 @@ And code blocks should also not be parsed:
 X|invalid type|should not be parsed|
 xyz|invalid type|should not be parsed|
 
+|text contains an invalid escape sequence: \n|value|
+
 |trailing stuff|should not be parsed|trailing
 
 |repeated attribute|should not be parsed|c:text to copy|c:https://example.com||c:html-class2|

@@ -3,7 +3,7 @@
 ![License](https://img.shields.io/pypi/l/mkdocs-badges)
 ![Python versions](https://img.shields.io/pypi/pyversions/mkdocs-badges)
 
-This package allows you to add badges to your mkdocs site.
+This package allows you to add badges to your MkDocs site.
 
 ## Documentation
 
@@ -11,23 +11,22 @@ This README is just a short intro to the package.
 For a quick start and detailed information please see the [documentation](https://mkdocs-badges.six-two.dev/).
 The documentation is also available in the `docs` folder of the source code and can be built locally with [MkDocs](https://www.mkdocs.org/).
 
-A development version built with the latest changes `HEAD` commit can be found at <https://mkdocs-badges-dev.six-two.dev/>
+A development version built with the latest changes (`HEAD` commit) can be found at <https://mkdocs-badges-dev.six-two.dev/>.
 
 ## Testing
 
-The documentation also serves as a test of the plugin.
-A hidden test page is available at `/test`.
+The documentation also serves as a test of the plugin, especially the files under the `Tests` menu item.
 
 Build the documentation with the latest source code:
 ```bash
 pip install . && mkdocs serve -t <theme>
 ```
 
-Themes that sould work are `mkdocs`, `readthedocs`, and `material`.
+Themes that should work are `mkdocs`, `readthedocs`, and `material`.
 
 ### Unit tests
 
-The github repository now contains some unit test.
+The GitHub repository now contains some unit test.
 You can run them against the current code with the following command (issued in the root directory of the repository):
 
 ```bash

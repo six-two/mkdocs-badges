@@ -3,7 +3,7 @@
 Install the plugin using pip:
 
 ```bash
-pip install mkdocs-badges
+pip install -U mkdocs-badges
 ```
 
 Then, add the plugin to your `mkdocs.yml`:

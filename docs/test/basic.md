@@ -67,7 +67,11 @@ Overlong element in long list:
 
 
 
-|text contains a \| pipe symbol|value|
+|text contains a backslash and a \| pipe symbol|value|
+|text contains two backslashes and a \\| pipe symbol|
+|text contains three backslashes and a \\\| pipe symbol|value|
+|text contains four backslashes and a \\\\| pipe symbol|
+|text contains \*escaped\* \`code\` \[link\](http://example.com) markup \| pipe symbol|
 
 
 Since this format matches the markdown tables format, I need to make sure that no header comes before any of my values
