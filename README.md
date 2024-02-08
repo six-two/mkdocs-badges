@@ -9,7 +9,9 @@ This package allows you to add badges to your mkdocs site.
 
 This README is just a short intro to the package.
 For a quick start and detailed information please see the [documentation](https://mkdocs-badges.six-two.dev/).
-The documentation is also available in the `docs` folder of the source code and can be built localy with [MkDocs](https://www.mkdocs.org/).
+The documentation is also available in the `docs` folder of the source code and can be built locally with [MkDocs](https://www.mkdocs.org/).
+
+A development version built with the latest changes `HEAD` commit can be found at <https://mkdocs-badges-dev.six-two.dev/>
 
 ## Testing
 

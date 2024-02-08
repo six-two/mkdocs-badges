@@ -7,8 +7,14 @@ cd "$( dirname "${BASH_SOURCE[0]}" )"
 
 # install the dependencies
 pip install -r requirements.txt
-# also install the latest (dev) version of this package
-pip install .
+
+if [[ -z "$DEPLOY_STABLE" ]]; then
+    # install the latest (dev) version of this package
+    pip install .
+else
+    # Install the latest published version
+    pip install -U mkdocs-badges
+fi
 
 # Vercel prefers outputs to be in public/
 mkdocs build -d public
