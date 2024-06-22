@@ -41,6 +41,11 @@ pip install . && python -m unittest
 
 ## Notable changes
 
+### Head
+
+- Rewrite `-` to `_` in install badge types.
+    This allows using both `brew-formula` and `brew_formula` notation.
+
 ### Version 0.4.3
 
 - Changed behavior of the `install_badge_data` option.

@@ -54,6 +54,12 @@ I|pip_gitlab|todo/honestly-I-have-not-found-something-yet|
 Custom test:
 I|custom_test|Click to see if it works|
 
+Custom test:
+I|custom-test|Using alternative notation|
+
+Custom test:
+I|custom_2|Using alternative notation|
+
 Escaping test (HTML is allowed in value for icons and stuff):
 I|custom_test|<s>'"Test</s>😀|
 

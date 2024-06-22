@@ -31,10 +31,10 @@ class InstallBadgeManager:
             link_template = badge_data["link_template"]
             command_template = badge_data["command_template"]
 
-            self.badges[badge_type] = InstallBadgeData(title, link_template, command_template)
+            self.badges[badge_type.replace("-", "_")] = InstallBadgeData(title, link_template, command_template)
 
     def format_badge(self, badge: ParsedBadge) -> str:
-        badge_type = badge.title
+        badge_type = badge.title.replace("-", "_")
         badge_value = badge.value
 
         badge_data = self.badges.get(badge_type)

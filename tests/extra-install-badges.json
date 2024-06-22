@@ -3,5 +3,10 @@
         "title": "Custom Install Badge",
         "link_template": "https://example.com/",
         "command_template": "echo '{{value}}'"
+    },
+    "custom-2": {
+        "title": "Custom Install Badge 2",
+        "link_template": "https://example.com/",
+        "command_template": "echo '{{value}}'"
     }
 }
