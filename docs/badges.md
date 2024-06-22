@@ -112,8 +112,7 @@ Clicking on the badge title (left side) will copy the command to install the sof
 To show them that this is possible, the cursor takes the form of a question mark.
 To show them what has happened, a popup is shown once they clicked.
 
-The right side is a link to the software on the given platorrm (github repo, PyPI page, linux package tracker, etc).
-
+The right side is a link to the software on the given platform (GitHub repo, PyPI page, linux package tracker, etc).
 
 Example markdown:
 
@@ -130,6 +129,34 @@ I|github|six-two/mkdocs-badges|
 I|pypi|mkdocs|
 </span>
 
+### Customizing
+
+A list of currently supported badge types can be found in the `Builtin` section of the [tests page](/test/install/#builtin).
+You can define your own install badge types by creating a JSON like the following:
+```json
+{
+    "name_to_use_in_markdown": {
+        "title": "Shown name on the badge",
+        "link_template": "https://url-that-is-opened/when-the-user-clicks-the-right-side-of-the-badge?value={{value}}",
+        "command_template": "install command {{value}}"
+    },
+    "custom_test": {
+        "title": "Custom Install Badge",
+        "link_template": "https://example.com/#{{value}}",
+        "command_template": "echo '{{value}}'"
+    }
+}
+```
+
+The `{{value}}` placeholder in the `link_template` and `command_template` fields will be replaced with the value that is specified in the markdown.
+So for example `I|custom_test|demo_value|` would have the link `https://example.com/#demo_value` and the command to copy `echo 'demo_value'`.
+
+You then use the `install_badge_data` option for the plugin, by setting the following in your `mkdocs.yml`:
+```yaml
+plugins:
+- badges:
+    install_badge_data: path/to/your-custom-install-badges.json
+```
 
 ## Tag badges
 
