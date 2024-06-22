@@ -55,9 +55,13 @@ class BadgesPlugin(BasePlugin[BadgesPluginConfig]):
         if badge_js_path not in extra_js:
             extra_js.append(badge_js_path)
 
-        # Load the install badge data from the data file
-        install_badge_data_path = self.config.install_badge_data or INSTALL_BADGE_DATA
-        self.install_badge_manager = InstallBadgeManager(install_badge_data_path)
+        self.install_badge_manager = InstallBadgeManager()
+        # load the defaults
+        self.install_badge_manager.load_badge_templates_from_file(INSTALL_BADGE_DATA)
+        if self.config.install_badge_data:
+            # Add new badge data or overwrite default definitions
+            self.install_badge_manager.load_badge_templates_from_file(self.config.install_badge_data)
+
         self.tag_badge_manager = TagBadgeManager(self.config.tag_page_link)
 
         return config

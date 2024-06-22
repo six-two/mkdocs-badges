@@ -19,9 +19,10 @@ class InstallBadgeData:
 
 
 class InstallBadgeManager:
-    def __init__(self, file_path: str) -> None:
+    def __init__(self) -> None:
         self.badges = {}
-        
+
+    def load_badge_templates_from_file(self, file_path: str):
         with open(file_path, "r") as f:
             file_data = json.load(f)
 

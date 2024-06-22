@@ -24,6 +24,7 @@ plugins:
 - search
 - badges:
     tag_page_link: /test/tags/
+    install_badge_data: tests/extra-install-badges.json
     # async: False
     # disable_warnings: True
 - tags:

@@ -1,0 +1,7 @@
+{
+    "custom_test": {
+        "title": "Custom Install Badge",
+        "link_template": "https://example.com/",
+        "command_template": "echo '{{value}}'"
+    }
+}

@@ -1,3 +1,4 @@
+import base64
 import html
 from typing import Optional
 
@@ -49,7 +50,8 @@ def element(value: str, class_list: list[str], link: Optional[str] = None, copy_
         return f'<a href="{html.escape(link)}"{class_attribute(class_list)}>{value}</a>'
     elif copy_text:
         class_list = ["badge-copy", *class_list]
-        return f'<span{class_attribute(class_list)} onclick="on_click_badge_name(\'{html.escape(copy_text)}\')">{value}</span>'
+        copy_base64 = base64.b64encode(copy_text.encode()).decode()
+        return f'<span{class_attribute(class_list)} data-copy-base64="{copy_base64}">{value}</span>'
     else:
         return f'<span{class_attribute(class_list)}>{value}</span>'
 

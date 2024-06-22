@@ -4,7 +4,12 @@
         "link_template": "https://aur.archlinux.org/packages/{{value}}",
         "command_template": "sudo pacaur -S {{value}}"
     },
-    "brew": {
+    "brew_cask": {
+        "title": "Homebrew",
+        "link_template": "https://formulae.brew.sh/cask/{{value}}",
+        "command_template": "brew install --cask {{value}}"
+    },
+    "brew_formula": {
         "title": "Homebrew",
         "link_template": "https://formulae.brew.sh/formula/{{value}}",
         "command_template": "brew install {{value}}"
@@ -13,6 +18,16 @@
         "title": "Debian",
         "link_template": "https://packages.debian.org/stable/{{value}}",
         "command_template": "sudo apt install {{value}}"
+    },
+    "docker_hub": {
+        "title": "DockerHub",
+        "link_template": "https://hub.docker.com/{{value}}",
+        "command_template": "docker pull docker.io/{{value}}"
+    },
+    "docker_ghcr": {
+        "title": "GitHub Container Registry",
+        "link_template": "https://ghcr.io/{{value}}",
+        "command_template": "docker pull ghcr.io/{{value}}"
     },
     "gem": {
         "title": "Ruby Gem",

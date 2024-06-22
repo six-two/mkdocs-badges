@@ -41,6 +41,14 @@ pip install . && python -m unittest
 
 ## Notable changes
 
+### Head
+
+- Changed behavior of the `install_badge_data` option.
+    Instead of removing the defaults the specified file is merged with them
+- Changed install badge data.
+    Renamed `brew` to `brew_formula` and added `brew_cask`, `docker_hub`, and `docker_ghcr`
+- Fixed crash of JavaScript copy code if the text contains a single quote
+
 ### Version 0.4.2
 
 - Detect markdown tables even if they have only a single dash in the header. Fixes [#4](https://github.com/six-two/mkdocs-badges/issues/4)
