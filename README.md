@@ -41,7 +41,7 @@ pip install . && python -m unittest
 
 ## Notable changes
 
-### Head
+### Version 0.4.3
 
 - Changed behavior of the `install_badge_data` option.
     Instead of removing the defaults the specified file is merged with them

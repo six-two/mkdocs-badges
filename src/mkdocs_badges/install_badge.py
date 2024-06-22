@@ -20,7 +20,7 @@ class InstallBadgeData:
 
 class InstallBadgeManager:
     def __init__(self) -> None:
-        self.badges = {}
+        self.badges: dict[str,InstallBadgeData] = {}
 
     def load_badge_templates_from_file(self, file_path: str):
         with open(file_path, "r") as f:
