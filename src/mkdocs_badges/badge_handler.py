@@ -105,7 +105,7 @@ def format_badge(badge: ParsedBadge, install_badge_manager: InstallBadgeManager,
         return badge_html
 
     else:
-        raise BadgeException(f"Unknown badge type '{typ}'")
+        raise BadgeException(f"Unknown badge type '{typ}'. Known types are '', L, R, I, C, T, S")
 
 
 def get_simplified_hostname(url: str) -> str:
