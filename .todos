@@ -1,1 +1,2 @@
 - rework badge syntax? It currently can not be used in most contexts (lists, etc)
+- document plugin config options (src/mkdocs_badges/plugin.py)

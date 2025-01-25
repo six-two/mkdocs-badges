@@ -10,7 +10,7 @@ All badges need to be in their now line and have no indent / leading whitespace.
 Badges inside (fenced) code bocks are also not interpreted.
 
 If multiple consecutive lines contain badges, they will be displayed next to each other (if space permits it).
-If you want each badge to be on it's won line, add an empty line between the badges.
+If you want each badge to be on it's own line, add an empty line between the badges.
 
 ## Simple badges
 
@@ -224,13 +224,15 @@ This badge only contains a single element (the title) and has no second element 
 The same extra attributes that can be set for custom badges can also be used here.
 However, you can not use a (ref-)link and a text to copy for the same badge, since only one element exists.
 
-For example the following badge would add the `programming_language_python` tag:
+Example markdown:
 ```
 S|Single element badge||
 S||You can also define the value here|
 S|Single element with link||link:https://example.com|
 S|Single element with text to copy||copy:single element|
 ```
+
+Result:
 
 <span class=result>
 S|Single element badge||
@@ -239,7 +241,79 @@ S|Single element with link||link:https://example.com|
 S|Single element with text to copy||copy:single element|
 </span>
 
+## Custom separators
 
+|Required version|0.4.5+|link:https://github.com/six-two/mkdocs-badges#notable-changes|.version|
+
+If you do not like the default separator character (`|`), you can change it in your `mkdocs.yml`:
+```yaml
+plugins:
+- badges:
+    separator: "$"
+```
+
+Then you can write all badge types shown above this section badges using that character instead of `|`.
+Ideally you choose an character that never appears in any badge text or value.
+If it does, you can escape it by prefixing it with a backslash like `\$`.
+
+Example markdown:
+```
+$Example badge$works$
+I$github$six-two/mkdocs-badges$
+S$Single element badge$$
+$Styled differently$by custom HTML classes$class:version$
+$Price$5\$$
+```
+
+Result:
+
+<!-- Yeah, this is cheating, but I can not change the separator for a piece of a page -->
+<span class=result>
+|Example badge|works|
+I|github|six-two/mkdocs-badges|
+S|Single element badge||
+|Styled differently|by custom HTML classes|class:version|
+|Price|5$|
+</span>
+
+
+
+## Badges in tables
+
+|Required version|0.4.5+|link:https://github.com/six-two/mkdocs-badges#notable-changes|.version|
+
+Badges in tables work similar to normal badges, but use a different separator (`^` instead of `|`) by default.
+This is to prevent conflict with the markdown table syntax, which also uses the `|` character.
+You can change the separator character with the `table_separator` property in your `mkdocs.yml`:
+```yaml
+plugins:
+- badges:
+    table_separator: "+"
+```
+
+Due to the current implementation a badge has to be alone in a cell.
+If you add any non-whitespace before or after the badge, it will not be parsed.
+
+If you want to use literal `^` or `|` characters inside a badge in a table, you need to backslash escape them (`\^` or `\|`).
+
+Example markdown:
+```markdown
+| Some                                   | Markdown                     | Table       |
+| -------------------------------------- | ---------------------------- | ----------- |
+| some row                               | without                      | badges      |
+| ^badge^normal^                         | L^badge^https://example.com^ | normal cell |
+| text before ^badge^will break badge^   | ^badge with carets^\^_\^^    | normal cell |
+| ^badge^will break^ with trailing text  | ^badge with pipes^a \|\| b^  | normal cell |
+```
+
+Result:
+
+| Some                                   | Markdown                     | Table       |
+| -------------------------------------- | ---------------------------- | ----------- |
+| some row                               | without                      | badges      |
+| ^badge^normal^                         | L^badge^https://example.com^ | normal cell |
+| text before ^badge^will break badge^   | ^badge with carets^\^_\^^    | normal cell |
+| ^badge^will break^ with trailing text  | ^badge with pipes^a \|\| b^  | normal cell |
 
 <!-- Link references -->
 [example_ref]: https://www.example.com
