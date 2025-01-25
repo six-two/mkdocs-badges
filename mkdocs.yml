@@ -19,6 +19,7 @@ nav:
   - test/invalid.md
   - test/tags.md
   - test/theme.md
+  - test/basic-caret-separator.md
 
 plugins:
 - search
@@ -27,6 +28,7 @@ plugins:
     install_badge_data: tests/extra-install-badges.json
     # async: False
     # disable_warnings: True
+    separator: "^"
 - tags:
     tags_file: test/tags.md
 

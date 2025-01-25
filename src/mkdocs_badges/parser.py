@@ -4,97 +4,7 @@ from typing import NamedTuple, Optional
 import re
 # local files
 from . import warning
-
-class BadgeException(Exception):
-    pass
-
-
-class ParsedBadge:
-    def __init__(
-            self,
-            badge_type: Optional[str],
-            title: str,
-            value: str,
-            copy_text: Optional[str],
-            link: Optional[str],
-            reflink: Optional[str],
-            html_classes: list[str],
-        ):
-        # Use the "or None" statements to make sure that the values are really None and not just "". Otherwise two equal seeming objects may not be equal
-        self.badge_type = badge_type or None
-        # It would look starnge with leading/trailing whitespace
-        self.title = title.strip()
-        self.value = value.strip()
-        self.copy_text = copy_text or None
-        self.link = link or None
-        self.reflink = reflink or None
-        # Sort the class names to make equality checks easier
-        self.html_classes = list(sorted(html_classes or []))
-
-    def check_fields(self) -> None:
-        if self.badge_type == "S":
-            # Special case handling of single value badges, which only contain either a title or a value
-            if self.title and self.value:
-                raise BadgeException("Single value badges can not contain both a title and a value")
-            elif not self.title and not self.value:
-                raise BadgeException("Single value batch needs to contain either a title or a value")
-
-            # Normalize values: store data in title, leave value empty
-            self.title = self.title or self.value
-            self.value = ""
-
-            # Check for other mutually exclusive attributes
-            if self.copy_text and (self.link or self.reflink):
-                raise BadgeException("Single value badges can not contain both a link and a text to copy")
-
-        else:
-            # Normal badges, should contain both title and value
-            if not self.title:
-                raise BadgeException("No title set")
-            if not self.value:
-                raise BadgeException("No value set")
-        
-        if self.link and self.reflink:
-            raise BadgeException("Mutually exclusive fields 'link' and 'reflink' set")
-
-    def assert_empty(self, name: str) -> None:
-        value = self.__dict__.get(name, None)
-        if value:
-            raise BadgeException(f"Expected empty value for field '{name}', but got {repr(value)}")
-
-    def assert_all_empty(self, name_list: list[str]) -> None:
-        for name in name_list:
-            self.assert_empty(name)
-
-    def __repr__(self) -> str:
-        parts = [
-            self.badge_type or "",
-            self.title,
-            self.value,
-        ]
-        if self.copy_text:
-            parts.append(f"c:{self.copy_text}")
-        if self.link:
-            parts.append(f"l:{self.link}")
-        if self.reflink:
-            parts.append(f"r:{self.reflink}")
-        if self.html_classes:
-            parts += self.html_classes
-
-        return f"<ParsedBadge:{parts}>"
-
-    def __eq__(self, other) -> bool:
-        if isinstance(other, self.__class__):
-            return (self.badge_type == other.badge_type
-                and self.title == other.title
-                and self.value == other.value
-                and self.copy_text == other.copy_text
-                and self.link == other.link
-                and self.reflink == other.reflink
-                and self.html_classes == other.html_classes)
-        else:
-            return False
-
+from .parsed_badge import ParsedBadge, BadgeException
 
 class ParserResultEntry(NamedTuple):
     line_index: int
@@ -109,37 +19,6 @@ CLASS_ATTR_REGEX = re.compile(r"^(?:\.|(?:class:))(.*)$")
 COPY_ATTR_REGEX = re.compile(r"^c(?:opy)?:(.*)$")
 LINK_ATTR_REGEX = re.compile(r"^l(?:ink)?:(.*)$")
 REF_LINK_ATTR_REGEX = re.compile(r"^r(?:eflink)?:(.*)$")
-
-# Test string: a|b|c\|d|e\\|f\\\|g\\\\h|\\\\\i|\\\\\\j|k
-SEPARATOR = "|"
-ESCAPE = "\\"
-ALLOWED_ESCAPED_CHARACTERS = [ESCAPE, SEPARATOR]
-
-
-def split_by_separator(text: str) -> list[str]:
-    result = []
-    current_part = ""
-    current_is_escaped = False
-
-    for char in text:
-        if current_is_escaped:
-            if char in ALLOWED_ESCAPED_CHARACTERS:
-                current_part += char
-                current_is_escaped = False
-            else:
-                pretty_allowed_sequences = ", ".join([f"'{seq}'" for seq in ALLOWED_ESCAPED_CHARACTERS])
-                raise BadgeException(f"'{ESCAPE}{char}' is not a valid escape sequence. Allowed escape sequences are {pretty_allowed_sequences}")
-        else:
-            if char == ESCAPE:
-                current_is_escaped = True
-            elif char == SEPARATOR:
-                result.append(current_part)
-                current_part = ""
-            else:
-                current_part += char
-    
-    result.append(current_part)
-    return result
 
 
 def parse_badge_parts(parts: list[str]) -> ParsedBadge:
@@ -187,13 +66,18 @@ def parse_badge_parts(parts: list[str]) -> ParsedBadge:
 
 
 class FileParser:
-    def __init__(self, file_name: str, file_content_lines: list[str]):
+    def __init__(self, file_name: str, file_content_lines: list[str], badge_separator: str):
         self.file_name = file_name
         # Add an empty line, since for the table header check we need to look ahead one line
         # This is way easier than specialized edge case handling rules
         self.lines = [*file_content_lines, ""]
         self.is_fenced_code_block = False
         self.is_table = False
+
+        # Test string: a|b|c\|d|e\\|f\\\|g\\\\h|\\\\\i|\\\\\\j|k
+        self.badge_separator = badge_separator
+        self.escape_character = "\\"
+        self.allowed_escaped_characters = [self.escape_character, self.badge_separator]
 
     def should_process_line(self, index: int) -> bool:
         line = self.lines[index]
@@ -235,12 +119,12 @@ class FileParser:
             line = line.rstrip()
 
             # Check if the line has pipe "|" symbols at the beginning and ending
-            if "|" not in line[:2] or line[-1] != "|":
+            if self.badge_separator not in line[:2] or line[-1] != self.badge_separator:
                 # Missing pipe symbol, this can not be a badge
                 return None
 
-            parts = split_by_separator(line)
-            # A valid line needs at least three pipes (four parts): "|title|value|" -> ["", "title", "value", ""]
+            parts = self.split_by_separator(line)
+            # A valid line needs at least three separators (four parts): "|title|value|" -> ["", "title", "value", ""]
             if len(parts) < 4:
                 # This can not be a valid badge, since it has to few parts
                 return None
@@ -268,6 +152,31 @@ class FileParser:
             # General error, probably caused by bad input (like invalid escape seqouence)
             warning(f"[{self.file_name}:{index+1}] General processing error: {ex}")
             return None
+
+    def split_by_separator(self, text: str) -> list[str]:
+        result = []
+        current_part = ""
+        current_is_escaped = False
+
+        for char in text:
+            if current_is_escaped:
+                if char in self.allowed_escaped_characters:
+                    current_part += char
+                    current_is_escaped = False
+                else:
+                    pretty_allowed_sequences = ", ".join([f"'{seq}'" for seq in self.allowed_escaped_characters])
+                    raise BadgeException(f"'{self.escape_character}{char}' is not a valid escape sequence. Allowed escape sequences are {pretty_allowed_sequences}")
+            else:
+                if char == self.escape_character:
+                    current_is_escaped = True
+                elif char == self.badge_separator:
+                    result.append(current_part)
+                    current_part = ""
+                else:
+                    current_part += char
+        
+        result.append(current_part)
+        return result
 
     def process(self) -> list[ParserResultEntry]:
         """

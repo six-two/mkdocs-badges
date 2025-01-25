@@ -6,6 +6,7 @@ from mkdocs.config.base import Config
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.structure.pages import Page
 from mkdocs.structure.files import Files
+from mkdocs.exceptions import PluginError
 # local files
 from . import warning, disable_warnings
 from .install_badge import InstallBadgeManager
@@ -30,6 +31,8 @@ class BadgesPluginConfig(Config):
     tag_page_link = Type(str, default="/index.html")
     # Disable warnings, do this at your own risk
     disable_warnings = Type(bool, default=False)
+    # This is the badge separator, change it at your own risk
+    separator = Type(str, default="|")
 
 
 class BadgesPlugin(BasePlugin[BadgesPluginConfig]):
@@ -54,6 +57,9 @@ class BadgesPlugin(BasePlugin[BadgesPluginConfig]):
         extra_js = config.extra_javascript
         if badge_js_path not in extra_js:
             extra_js.append(badge_js_path)
+        
+        if len(self.config.separator) != 1:
+            raise PluginError(f"The 'separator' field needs to contain a single character, but has {len(self.config.separator)}: '{self.config.separator}'")
 
         self.install_badge_manager = InstallBadgeManager()
         # load the defaults
@@ -77,7 +83,7 @@ class BadgesPlugin(BasePlugin[BadgesPluginConfig]):
         try:
             if self.config.enabled:
                 file_name = page.file.src_path
-                markdown = replace_badges(file_name, markdown, self.install_badge_manager, self.tag_badge_manager)
+                markdown = replace_badges(file_name, markdown, self.config.separator, self.install_badge_manager, self.tag_badge_manager)
                 self.tag_badge_manager.apply_tags_to_page(page)
             else:
                 warning("Plugin is disabled")

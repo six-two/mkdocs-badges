@@ -23,10 +23,10 @@ BADGE_GROUP_START = '<span class="badge-group">\n'
 BADGE_GROUP_END = '\n</span>'
 
 
-def replace_badges(file_name: str, markdown: str, *args) -> str:
+def replace_badges(file_name: str, markdown: str, badge_separator: str, *args) -> str:
     lines = markdown.split("\n")
 
-    parser_result_list = FileParser(file_name, lines).process()
+    parser_result_list = FileParser(file_name, lines, badge_separator).process()
     if parser_result_list:
         # Replace the lines with the rendered badges
         replaced_line_indices = []

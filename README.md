@@ -41,6 +41,10 @@ pip install . && python -m unittest
 
 ## Notable changes
 
+### Head
+
+- Allow setting a custom separator with `separator` in your `mkdocs.yml`
+
 ### Version 0.4.4
 
 - Rewrite `-` to `_` in install badge types.

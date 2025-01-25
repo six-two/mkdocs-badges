@@ -73,6 +73,7 @@ Overlong element in long list:
 |text contains four backslashes and a \\\\| pipe symbol|
 |text contains \*escaped\* \`code\` \[link\](http://example.com) markup \| pipe symbol|
 
+### Tables
 
 Since this format matches the markdown tables format, I need to make sure that no header comes before any of my values
 
@@ -82,6 +83,13 @@ Since this format matches the markdown tables format, I need to make sure that n
 table row without outer pipes|should not be parsed
 
 |not part of the table|should be parsed|
+
+But badges in tables should be allowed
+
+|Markdown|Table|
+|---|---|
+|table rows| L\|Should be parsed\|https://example.com\| |
+
 
 
 ### Reflink badges
