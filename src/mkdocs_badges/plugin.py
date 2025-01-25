@@ -1,7 +1,7 @@
 # pip dependency
 import mkdocs
 from mkdocs.config.config_options import Type, ExtraScriptValue
-from mkdocs.plugins import BasePlugin # , event_priority
+from mkdocs.plugins import BasePlugin
 from mkdocs.config.base import Config
 from mkdocs.config.defaults import MkDocsConfig
 from mkdocs.structure.pages import Page

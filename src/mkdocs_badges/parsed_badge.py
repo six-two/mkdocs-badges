@@ -1,7 +1,4 @@
-from typing import NamedTuple, Optional
-import re
-# local files
-from . import warning
+from typing import Optional
 
 class BadgeException(Exception):
     pass

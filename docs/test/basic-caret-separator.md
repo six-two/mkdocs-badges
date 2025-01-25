@@ -1,6 +1,6 @@
 # Tests: Basic with different separator
 
-This page uses the caret (`^`) separator and is used to test custom separators.
+This page uses the caret (`^`) separator for normal badges and the `+` separator for badges in tables and is used to test custom separators.
 
 <style>
     /* For for debugging the layout  */
@@ -71,7 +71,7 @@ Overlong element in long list:
 ^text contains two backslashes and a \\^ pipe symbol^
 ^text contains three backslashes and a \\\^ pipe symbol^value^
 ^text contains four backslashes and a \\\\^ pipe symbol^
-^text contains \*escaped\* \`code\` \[link\](http://example.com) markup \^ pipe symbol^
+^text contains \*escaped\* \`code\` \[link\](http://example.com) markup ^ pipe symbol^
 
 ### Tables
 
@@ -92,7 +92,7 @@ But badges in tables should be allowed
 |---|---|---|
 |table cells| L+Should be parsed+https://example.com+ |test|
 |+test 1+should be parsed+| +test 2+should be parsed+ |+test 3+should be parsed+|
-|+should+be \| parsed+ | +\\Test\+a+\|123+ | L+Should not be parsed+https://example.com+a ||
+|+should+be \| parsed+ | +\\Should\+be+\|parsed+ | L+Should not be parsed+https://example.com+a ||
 
 +outside of a table+this should not be parsed+
 

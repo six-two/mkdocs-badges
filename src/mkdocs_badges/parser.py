@@ -3,7 +3,7 @@
 from typing import NamedTuple, Optional
 import re
 # local files
-from . import warning
+from . import warning_for_location
 from .parsed_badge import ParsedBadge, BadgeException
 
 class ParserResultEntry(NamedTuple):
@@ -11,6 +11,10 @@ class ParserResultEntry(NamedTuple):
     line_index: int
     only_replace_substring: Optional[str] # We set this field if we do a replacement of a table cell (and not the whole line)
     parsed_badge: ParsedBadge
+
+class SplitPart(NamedTuple):
+    raw: str # the original string, as it was read
+    interpreted: str # this version interprets escaped characters. For example \\ will be a \ and \<SEPARATOR> will be the literal character <SEPARATOR>
 
 # Optional whitespace, optional alignment, at least three dashes, optional alignment, optional whitespace
 # Update from #4: It seems to be possible to just use a single dash
@@ -76,7 +80,6 @@ class FileParser:
         self.is_fenced_code_block = False
         self.is_table = False
 
-        # Test string: a|b|c\|d|e\\|f\\\|g\\\\h|\\\\\i|\\\\\\j|k
         self.badge_separator = badge_separator
         self.badge_table_separator = badge_table_separator
         self.escape_character = "\\"
@@ -135,58 +138,58 @@ class FileParser:
             
             # This is not a table header, so let's try parsing it
             try:
-                parsed_badge = parse_badge_parts(parts)
+                interpreted_parts = [x.interpreted for x in parts]
+                parsed_badge = parse_badge_parts(interpreted_parts)
+
                 # Return the badge info that we parsed
-
-                if self.is_table:
-                    # Add back the escaped characters, so that the replacing later on will not fail
-                    # We can only do it now (after parsing), so that the parsing of the badge will not fail
-                    only_replace_substring = line.replace("|", "\\|")
-                else:
-                    only_replace_substring = None
-
                 return ParserResultEntry(
                     file_name=self.file_name,
                     line_index=index,
                     parsed_badge=parsed_badge,
-                    only_replace_substring=only_replace_substring,
+                    only_replace_substring=None, # will be set outside of this method if required
                 )
             except Exception as ex:
                 # Parsing failed, let's give some info to help with debugging
-                warning(f"[{self.file_name}:{index+1}] Parsing error: {ex}")
+                warning_for_location(self.file_name, index, f"Parsing error: {ex}")
                 return None
 
         except BadgeException as ex:
             # General error, probably caused by bad input (like invalid escape seqouence)
-            warning(f"[{self.file_name}:{index+1}] General processing error: {ex}")
+            warning_for_location(self.file_name, index, f"General processing error: {ex}")
             return None
 
-    def split_by_separator(self, text: str, separator: str) -> list[str]:
+    def split_by_separator(self, text: str, separator: str) -> list[SplitPart]:
         result = []
-        current_part = ""
+        current_part_raw = ""
+        current_part_interpreted = ""
         current_is_escaped = False
-        # allowed_escaped_characters = [self.escape_character, separator]
 
         for char in text:
+            current_part_raw += char
             if current_is_escaped:
                 if char == separator:
-                    current_part += char
+                    # Treat the escaped separator as just a normal character
+                    current_part_interpreted += char
+                elif char == self.escape_character:
+                    # keep only one of the backslashes
+                    current_part_interpreted += self.escape_character
                 else:
-                    current_part += self.escape_character + char
+                    # We do not understand this escaping, but it may be used to escape markdown characters or something.
+                    # So we do not modify it
+                    current_part_interpreted += self.escape_character + char
+                
                 current_is_escaped = False
-                # else:
-                #     pretty_allowed_sequences = ", ".join([f"'{seq}'" for seq in allowed_escaped_characters])
-                #     raise BadgeException(f"'{self.escape_character}{char}' is not a valid escape sequence. Allowed escape sequences are {pretty_allowed_sequences}")
             else:
                 if char == self.escape_character:
                     current_is_escaped = True
                 elif char == separator:
-                    result.append(current_part)
-                    current_part = ""
+                    current_part_raw = current_part_raw[:-1] # remove the separator, which we already have appended
+                    result.append(SplitPart(raw=current_part_raw, interpreted=current_part_interpreted))
+                    current_part_raw = current_part_interpreted = ""
                 else:
-                    current_part += char
+                    current_part_interpreted += char
         
-        result.append(current_part)
+        result.append(SplitPart(raw=current_part_raw, interpreted=current_part_interpreted))
         return result
 
     def process(self) -> list[ParserResultEntry]:
@@ -208,12 +211,14 @@ class FileParser:
                         # We do not do a simple string split, since there may be escaped separators ('\|') in the line
                         for cell in self.split_by_separator(line, "|"):
                             # Allow (ignore) whitespace between table separators and cell contents
-                            cell = cell.strip()
+                            cell_string = cell.interpreted.strip()
                             # We treat every cell like its own line (the method inside handles not actually replacing the full line later)
-                            if result := self.try_parse_line(cell, index):
+                            if result := self.try_parse_line(cell_string, index):
+                                # Use the actual read raw data, so that I do not have to undo ambiguous unescaping (caused wierd bugs)
+                                result = result._replace(only_replace_substring=cell.raw.strip())
                                 results.append(result)
                     except Exception as ex:
-                        warning(f"Error splitting table columns in line '{line}': {ex}")
+                        warning_for_location(self.file_name, index, f"Error splitting table columns in line '{line}': {ex}")
                 else:
                     if result := self.try_parse_line(line, index):
                         results.append(result)

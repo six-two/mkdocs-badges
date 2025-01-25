@@ -1,8 +1,8 @@
 from urllib.parse import urlparse
 
 # local files
-from . import warning
-from .parser import ParsedBadge, ParserResultEntry, BadgeException, FileParser
+from . import warning_for_entry
+from .parser import ParserResultEntry, BadgeException, FileParser
 from .badge_html import generate_badge_html, generate_single_element_badge_html
 from .install_badge import InstallBadgeManager
 from .tag_badge import TagBadgeManager
@@ -43,13 +43,13 @@ def replace_badges(file_name: str, markdown: str, badge_separator: str, badge_ta
                     if old_line != new_line:
                         lines[entry.line_index] = new_line
                     else:
-                        warning(f"Replacing '{entry.only_replace_substring}' in line '{old_line}' failed")
+                        warning_for_entry(entry, f"Replacing '{entry.only_replace_substring}' in line '{old_line}' failed")
                 else:
                     # Replaced the entire line
                     lines[entry.line_index] = f"\t{badge_html}"
                     replaced_line_indices.append(entry.line_index)
             except BadgeException as error:
-                warning(f"[{file_name}:{entry.line_index+1}] Processing error: {error}")
+                warning_for_entry(entry, f"Processing error: {error}")
 
         # Surround each group of badges with the container placeholders (required for layout)
         replaced_line_indices = list(sorted(replaced_line_indices))

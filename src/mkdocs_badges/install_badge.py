@@ -1,8 +1,8 @@
 import json
 # local files
-from . import warning
+from . import warning_for_entry
 from .badge_html import generate_badge_html
-from .parser import ParsedBadge, ParserResultEntry
+from .parser import ParserResultEntry
 
 
 class InstallBadgeData:
@@ -45,6 +45,6 @@ class InstallBadgeManager:
 
             return generate_badge_html(title, badge_value, copy_text=install_command, link=package_url, extra_classes=["badge-install"])
         else:
-            warning(f"[{badge_entry.file_name}:{badge_entry.line_index}] Unknown install badge type: '{badge_type}'. Known values are {', '.join(self.badges.keys())}")
+            warning_for_entry(badge_entry, f"Unknown install badge type: '{badge_type}'. Known values are {', '.join(self.badges.keys())}")
             # fallback: use a normal badge
             return generate_badge_html(badge_type, badge_value)
