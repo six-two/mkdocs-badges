@@ -8,6 +8,7 @@ from .parsed_badge import ParsedBadge, BadgeException
 
 class ParserResultEntry(NamedTuple):
     line_index: int
+    only_replace_substring: Optional[str] # We set this field if we do a replacement of a table cell (and not the whole line)
     parsed_badge: ParsedBadge
 
 # Optional whitespace, optional alignment, at least three dashes, optional alignment, optional whitespace
@@ -66,7 +67,7 @@ def parse_badge_parts(parts: list[str]) -> ParsedBadge:
 
 
 class FileParser:
-    def __init__(self, file_name: str, file_content_lines: list[str], badge_separator: str):
+    def __init__(self, file_name: str, file_content_lines: list[str], badge_separator: str, badge_table_separator: str):
         self.file_name = file_name
         # Add an empty line, since for the table header check we need to look ahead one line
         # This is way easier than specialized edge case handling rules
@@ -76,8 +77,8 @@ class FileParser:
 
         # Test string: a|b|c\|d|e\\|f\\\|g\\\\h|\\\\\i|\\\\\\j|k
         self.badge_separator = badge_separator
+        self.badge_table_separator = badge_table_separator
         self.escape_character = "\\"
-        self.allowed_escaped_characters = [self.escape_character, self.badge_separator]
 
     def should_process_line(self, index: int) -> bool:
         line = self.lines[index]
@@ -101,29 +102,25 @@ class FileParser:
             # This line is indented (probably a code block). Do not process
             return False
 
-        if TABLE_HEADER_REGEX.match(line):
+        if (not self.is_table) and TABLE_HEADER_REGEX.match(line):
             # This is probably the start of a table. This line should not be processed
             self.is_table = True
-            return False
-
-        if self.is_table:
-            # If we are in a table, we do not process badges
             return False
 
         # If we found no reason not to process the line, we should process it
         return True
 
-    def try_parse_line(self, index: int) -> Optional[ParserResultEntry]:
+    def try_parse_line(self, line: str, index: int) -> Optional[ParserResultEntry]:
         try:
-            line = self.lines[index]
             line = line.rstrip()
+            badge_separator = self.badge_table_separator if self.is_table else self.badge_separator
 
             # Check if the line has pipe "|" symbols at the beginning and ending
-            if self.badge_separator not in line[:2] or line[-1] != self.badge_separator:
+            if badge_separator not in line[:2] or line[-1] != badge_separator:
                 # Missing pipe symbol, this can not be a badge
                 return None
 
-            parts = self.split_by_separator(line)
+            parts = self.split_by_separator(line, badge_separator)
             # A valid line needs at least three separators (four parts): "|title|value|" -> ["", "title", "value", ""]
             if len(parts) < 4:
                 # This can not be a valid badge, since it has to few parts
@@ -142,6 +139,7 @@ class FileParser:
                 return ParserResultEntry(
                     line_index=index,
                     parsed_badge=parsed_badge,
+                    only_replace_substring=line if self.is_table else None
                 )
             except Exception as ex:
                 # Parsing failed, let's give some info to help with debugging
@@ -153,23 +151,24 @@ class FileParser:
             warning(f"[{self.file_name}:{index+1}] General processing error: {ex}")
             return None
 
-    def split_by_separator(self, text: str) -> list[str]:
+    def split_by_separator(self, text: str, separator: str) -> list[str]:
         result = []
         current_part = ""
         current_is_escaped = False
+        allowed_escaped_characters = [self.escape_character, separator]
 
         for char in text:
             if current_is_escaped:
-                if char in self.allowed_escaped_characters:
+                if char in allowed_escaped_characters:
                     current_part += char
                     current_is_escaped = False
                 else:
-                    pretty_allowed_sequences = ", ".join([f"'{seq}'" for seq in self.allowed_escaped_characters])
+                    pretty_allowed_sequences = ", ".join([f"'{seq}'" for seq in allowed_escaped_characters])
                     raise BadgeException(f"'{self.escape_character}{char}' is not a valid escape sequence. Allowed escape sequences are {pretty_allowed_sequences}")
             else:
                 if char == self.escape_character:
                     current_is_escaped = True
-                elif char == self.badge_separator:
+                elif char == separator:
                     result.append(current_part)
                     current_part = ""
                 else:
@@ -190,8 +189,19 @@ class FileParser:
             # Check if we should try to process the line
             if self.should_process_line(index):
                 # Actually try to process the line
-                if result := self.try_parse_line(index):
-                    # It worked :)
-                    results.append(result)
+                line = self.lines[index]
+                if self.is_table:
+                    # For a table we try to treat every column as a line, since they all could contain badges
+                    try:
+                        # We do not do a simple string split, since there may be escaped separators ('\|') in the line
+                        for cell in self.split_by_separator(line, "|"):
+                            if result := self.try_parse_line(cell, index):
+                                results.append(result)
+                    except Exception as ex:
+                        warning(f"Error splitting table columns in line '{line}': {ex}")
+                else:
+                    if result := self.try_parse_line(line, index):
+                        # It worked :)
+                        results.append(result)
 
         return results

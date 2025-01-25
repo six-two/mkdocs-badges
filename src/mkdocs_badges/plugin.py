@@ -33,6 +33,7 @@ class BadgesPluginConfig(Config):
     disable_warnings = Type(bool, default=False)
     # This is the badge separator, change it at your own risk
     separator = Type(str, default="|")
+    table_separator = Type(str, default="^")
 
 
 class BadgesPlugin(BasePlugin[BadgesPluginConfig]):
@@ -83,7 +84,7 @@ class BadgesPlugin(BasePlugin[BadgesPluginConfig]):
         try:
             if self.config.enabled:
                 file_name = page.file.src_path
-                markdown = replace_badges(file_name, markdown, self.config.separator, self.install_badge_manager, self.tag_badge_manager)
+                markdown = replace_badges(file_name, markdown, self.config.separator, self.config.table_separator, self.install_badge_manager, self.tag_badge_manager)
                 self.tag_badge_manager.apply_tags_to_page(page)
             else:
                 warning("Plugin is disabled")

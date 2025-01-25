@@ -23,19 +23,25 @@ BADGE_GROUP_START = '<span class="badge-group">\n'
 BADGE_GROUP_END = '\n</span>'
 
 
-def replace_badges(file_name: str, markdown: str, badge_separator: str, *args) -> str:
+def replace_badges(file_name: str, markdown: str, badge_separator: str, badge_table_separator: str, *args) -> str:
     lines = markdown.split("\n")
 
-    parser_result_list = FileParser(file_name, lines, badge_separator).process()
+    parser_result_list = FileParser(file_name, lines, badge_separator, badge_table_separator).process()
     if parser_result_list:
         # Replace the lines with the rendered badges
+        # @TODO: handle replacing only cells in tables and not the whole line
         replaced_line_indices = []
         for entry in parser_result_list:
             try:
                 badge_html = format_badge(entry.parsed_badge, *args)
                 # Indent it a bit to make debugging it easier when viewing the page's source
-                lines[entry.line_index] = f"\t{badge_html}"
-                replaced_line_indices.append(entry.line_index)
+                if entry.only_replace_substring:
+                    # Replace only part of the line (for table cells)
+                    lines[entry.line_index] = lines[entry.line_index].replace(entry.only_replace_substring, badge_html)
+                else:
+                    # Replaced the entire line
+                    lines[entry.line_index] = f"\t{badge_html}"
+                    replaced_line_indices.append(entry.line_index)
             except BadgeException as error:
                 warning(f"[{file_name}:{entry.line_index+1}] Processing error: {error}")
 

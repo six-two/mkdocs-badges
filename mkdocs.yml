@@ -28,7 +28,7 @@ plugins:
     install_badge_data: tests/extra-install-badges.json
     # async: False
     # disable_warnings: True
-    separator: "^"
+    # separator: "^"
 - tags:
     tags_file: test/tags.md
 

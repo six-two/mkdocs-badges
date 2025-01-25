@@ -7,7 +7,7 @@ def as_separator_html(value: str) -> str:
     return f"<span class=sep>{value}</span>"
 
 START = as_separator_html(" [")
-SEPARATOR = as_separator_html(" | ")
+SEPARATOR = as_separator_html(" : ") # Pipe would break badges inside tables, since it has special meening in markdown (table separator)
 END = as_separator_html("] ")
 
 
