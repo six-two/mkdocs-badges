@@ -29,6 +29,7 @@ plugins:
     # async: False
     # disable_warnings: True
     # separator: "^"
+    # table_separator: "+"
 - tags:
     tags_file: test/tags.md
 

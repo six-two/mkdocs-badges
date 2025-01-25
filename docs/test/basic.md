@@ -92,6 +92,7 @@ But badges in tables should be allowed
 |^test 1^should be parsed^| ^test 2^should be parsed^ |^test 3^should be parsed^|
 |^should^be \| parsed^ | ^\\Test\^a^\|123^ | L^Should not be parsed^https://example.com^a ||
 
+^outside of a table^this should not be parsed^
 
 
 ### Reflink badges

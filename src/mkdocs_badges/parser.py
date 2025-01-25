@@ -207,16 +207,15 @@ class FileParser:
                     try:
                         # We do not do a simple string split, since there may be escaped separators ('\|') in the line
                         for cell in self.split_by_separator(line, "|"):
-                            # print("[IN]", cell)
-                            cell = cell.strip() # Allow whitespace between table separators and cell contents
+                            # Allow (ignore) whitespace between table separators and cell contents
+                            cell = cell.strip()
+                            # We treat every cell like its own line (the method inside handles not actually replacing the full line later)
                             if result := self.try_parse_line(cell, index):
                                 results.append(result)
-                                print(" ->", result)
                     except Exception as ex:
                         warning(f"Error splitting table columns in line '{line}': {ex}")
                 else:
                     if result := self.try_parse_line(line, index):
-                        # It worked :)
                         results.append(result)
 
         return results

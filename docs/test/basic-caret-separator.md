@@ -86,10 +86,15 @@ table row without outer pipes^should not be parsed
 
 But badges in tables should be allowed
 
-^Markdown^Table^
-^---^---^
-^table rows^ L\^Should be parsed\^https://example.com\^ ^
+But badges in tables should be allowed
 
+|Markdown|Table||
+|---|---|---|
+|table cells| L+Should be parsed+https://example.com+ |test|
+|+test 1+should be parsed+| +test 2+should be parsed+ |+test 3+should be parsed+|
+|+should+be \| parsed+ | +\\Test\+a+\|123+ | L+Should not be parsed+https://example.com+a ||
+
++outside of a table+this should not be parsed+
 
 
 ### Reflink badges
