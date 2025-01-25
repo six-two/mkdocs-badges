@@ -2,7 +2,7 @@ import json
 # local files
 from . import warning
 from .badge_html import generate_badge_html
-from .parser import ParsedBadge
+from .parser import ParsedBadge, ParserResultEntry
 
 
 class InstallBadgeData:
@@ -33,9 +33,9 @@ class InstallBadgeManager:
 
             self.badges[badge_type.replace("-", "_")] = InstallBadgeData(title, link_template, command_template)
 
-    def format_badge(self, badge: ParsedBadge) -> str:
-        badge_type = badge.title.replace("-", "_")
-        badge_value = badge.value
+    def format_badge(self, badge_entry: ParserResultEntry) -> str:
+        badge_type = badge_entry.parsed_badge.title.replace("-", "_")
+        badge_value = badge_entry.parsed_badge.value
 
         badge_data = self.badges.get(badge_type)
         if badge_data:
@@ -45,6 +45,6 @@ class InstallBadgeManager:
 
             return generate_badge_html(title, badge_value, copy_text=install_command, link=package_url, extra_classes=["badge-install"])
         else:
-            warning(f"Unknown install badge type: '{badge_type}'. Known values are {', '.join(self.badges.keys())}")
+            warning(f"[{badge_entry.file_name}:{badge_entry.line_index}] Unknown install badge type: '{badge_type}'. Known values are {', '.join(self.badges.keys())}")
             # fallback: use a normal badge
             return generate_badge_html(badge_type, badge_value)

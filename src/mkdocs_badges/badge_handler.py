@@ -2,7 +2,7 @@ from urllib.parse import urlparse
 
 # local files
 from . import warning
-from .parser import ParsedBadge, BadgeException, FileParser
+from .parser import ParsedBadge, ParserResultEntry, BadgeException, FileParser
 from .badge_html import generate_badge_html, generate_single_element_badge_html
 from .install_badge import InstallBadgeManager
 from .tag_badge import TagBadgeManager
@@ -29,15 +29,21 @@ def replace_badges(file_name: str, markdown: str, badge_separator: str, badge_ta
     parser_result_list = FileParser(file_name, lines, badge_separator, badge_table_separator).process()
     if parser_result_list:
         # Replace the lines with the rendered badges
-        # @TODO: handle replacing only cells in tables and not the whole line
         replaced_line_indices = []
         for entry in parser_result_list:
             try:
-                badge_html = format_badge(entry.parsed_badge, *args)
+                badge_html = format_badge(entry, *args)
                 # Indent it a bit to make debugging it easier when viewing the page's source
                 if entry.only_replace_substring:
                     # Replace only part of the line (for table cells)
-                    lines[entry.line_index] = lines[entry.line_index].replace(entry.only_replace_substring, badge_html)
+                    old_line = lines[entry.line_index]
+                    # We need to add escaping if text contains pipe characters, since they otherwise will break the table layout
+                    badge_html = badge_html.replace("|", "\\|")
+                    new_line = old_line.replace(entry.only_replace_substring, badge_html)
+                    if old_line != new_line:
+                        lines[entry.line_index] = new_line
+                    else:
+                        warning(f"Replacing '{entry.only_replace_substring}' in line '{old_line}' failed")
                 else:
                     # Replaced the entire line
                     lines[entry.line_index] = f"\t{badge_html}"
@@ -62,7 +68,8 @@ def replace_badges(file_name: str, markdown: str, badge_separator: str, badge_ta
         return markdown
 
 
-def format_badge(badge: ParsedBadge, install_badge_manager: InstallBadgeManager, tag_badge_manager: TagBadgeManager) -> str:
+def format_badge(badge_entry: ParserResultEntry, install_badge_manager: InstallBadgeManager, tag_badge_manager: TagBadgeManager) -> str:
+    badge = badge_entry.parsed_badge
     badge.check_fields()
     typ = badge.badge_type
 
@@ -92,7 +99,7 @@ def format_badge(badge: ParsedBadge, install_badge_manager: InstallBadgeManager,
         return f"[{badge_html}][{badge.value}]"
 
     elif typ == "I":
-        return install_badge_manager.format_badge(badge)
+        return install_badge_manager.format_badge(badge_entry)
     
     elif typ == "C":
         badge.assert_all_empty(COPY_BADGE_EMPTY_FIELDS)
@@ -101,7 +108,7 @@ def format_badge(badge: ParsedBadge, install_badge_manager: InstallBadgeManager,
 
     elif typ == "T":
         badge.assert_all_empty(TAG_BADGE_EMPTY_FIELDS)
-        return tag_badge_manager.format_badge(badge)
+        return tag_badge_manager.format_badge(badge_entry)
 
     elif typ == "S":
         classes = ["badge-single", *badge.html_classes]

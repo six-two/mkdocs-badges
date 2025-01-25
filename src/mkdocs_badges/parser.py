@@ -7,6 +7,7 @@ from . import warning
 from .parsed_badge import ParsedBadge, BadgeException
 
 class ParserResultEntry(NamedTuple):
+    file_name: str
     line_index: int
     only_replace_substring: Optional[str] # We set this field if we do a replacement of a table cell (and not the whole line)
     parsed_badge: ParsedBadge
@@ -136,10 +137,19 @@ class FileParser:
             try:
                 parsed_badge = parse_badge_parts(parts)
                 # Return the badge info that we parsed
+
+                if self.is_table:
+                    # Add back the escaped characters, so that the replacing later on will not fail
+                    # We can only do it now (after parsing), so that the parsing of the badge will not fail
+                    only_replace_substring = line.replace("|", "\\|")
+                else:
+                    only_replace_substring = None
+
                 return ParserResultEntry(
+                    file_name=self.file_name,
                     line_index=index,
                     parsed_badge=parsed_badge,
-                    only_replace_substring=line if self.is_table else None
+                    only_replace_substring=only_replace_substring,
                 )
             except Exception as ex:
                 # Parsing failed, let's give some info to help with debugging
@@ -155,16 +165,18 @@ class FileParser:
         result = []
         current_part = ""
         current_is_escaped = False
-        allowed_escaped_characters = [self.escape_character, separator]
+        # allowed_escaped_characters = [self.escape_character, separator]
 
         for char in text:
             if current_is_escaped:
-                if char in allowed_escaped_characters:
+                if char == separator:
                     current_part += char
-                    current_is_escaped = False
                 else:
-                    pretty_allowed_sequences = ", ".join([f"'{seq}'" for seq in allowed_escaped_characters])
-                    raise BadgeException(f"'{self.escape_character}{char}' is not a valid escape sequence. Allowed escape sequences are {pretty_allowed_sequences}")
+                    current_part += self.escape_character + char
+                current_is_escaped = False
+                # else:
+                #     pretty_allowed_sequences = ", ".join([f"'{seq}'" for seq in allowed_escaped_characters])
+                #     raise BadgeException(f"'{self.escape_character}{char}' is not a valid escape sequence. Allowed escape sequences are {pretty_allowed_sequences}")
             else:
                 if char == self.escape_character:
                     current_is_escaped = True
@@ -195,8 +207,11 @@ class FileParser:
                     try:
                         # We do not do a simple string split, since there may be escaped separators ('\|') in the line
                         for cell in self.split_by_separator(line, "|"):
+                            # print("[IN]", cell)
+                            cell = cell.strip() # Allow whitespace between table separators and cell contents
                             if result := self.try_parse_line(cell, index):
                                 results.append(result)
+                                print(" ->", result)
                     except Exception as ex:
                         warning(f"Error splitting table columns in line '{line}': {ex}")
                 else:

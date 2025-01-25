@@ -89,8 +89,8 @@ But badges in tables should be allowed
 |Markdown|Table||
 |---|---|---|
 |table cells| L^Should be parsed^https://example.com^ |test|
-|^test 1^should be parsed^| ^test 2^should be parsed^|^test 3^should be parsed^|
-|^should^be \| parsed^| L^Should not be parsed https://example.com^ |test|
+|^test 1^should be parsed^| ^test 2^should be parsed^ |^test 3^should be parsed^|
+|^should^be \| parsed^ | ^\\Test\^a^\|123^ | L^Should not be parsed^https://example.com^a ||
 
 
 

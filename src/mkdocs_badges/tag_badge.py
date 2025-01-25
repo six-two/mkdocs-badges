@@ -3,7 +3,7 @@ import re
 from mkdocs.structure.pages import Page
 # local files
 from .badge_html import generate_badge_html
-from .parser import ParsedBadge
+from .parser import ParserResultEntry
 
 TAG_REGEX_BAD_CHARS = re.compile("[^0-9a-zA-Z_]+")
 TAG_REGEX_MULTI_UNDERSCORES = re.compile("__+")
@@ -45,7 +45,8 @@ class TagBadgeManager:
             # Empty tag list
             self.tags = set()
 
-    def format_badge(self, badge: ParsedBadge) -> str:
+    def format_badge(self, badge_entry: ParserResultEntry) -> str:
+        badge = badge_entry.parsed_badge
         tag_name = get_tag_name(badge.title, badge.value)
         classes = ["badge-tag", *badge.html_classes]
         link = f"{self.tag_page_link}#{tag_name}"
