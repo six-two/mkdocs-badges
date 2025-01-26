@@ -61,3 +61,7 @@ S|Should cause|an error|
 S|Should cause an error||c:error|l:error|
 
 S|Should cause an error||c:error|r:example_ref|
+
+## Foo
+
+This section is added to prevent a warning about a non-existent anchor. 

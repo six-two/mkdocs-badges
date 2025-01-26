@@ -131,7 +131,7 @@ I|pypi|mkdocs|
 
 ### Customizing
 
-A list of currently supported badge types can be found in the `Builtin` section of the [tests page](/test/install/#builtin).
+A list of currently supported badge types can be found in the `Builtin` section of the [tests page](test/install.md#builtin).
 You can define your own install badge types by creating a JSON like the following:
 ```json
 {
