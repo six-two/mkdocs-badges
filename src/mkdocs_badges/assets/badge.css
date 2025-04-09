@@ -17,8 +17,14 @@
 a.badge:hover,
 .badge-reflink:hover {
     text-decoration: underline;
+}
+
+/* Higher priority than material's '.md-typeset a' */
+.md-typeset .badge a,
+.md-typeset a.badge {
     color: var(--md-badge-text-color);
 }
+
 
 .badge-group {
     display: flex;
