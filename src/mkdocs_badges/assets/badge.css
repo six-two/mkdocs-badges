@@ -42,7 +42,7 @@ a.badge:hover,
     border-top-right-radius: var(--md-badge-rounded-size);
 }
 
-.badge .value {
+.badge .value, .badge .value a {
     color: var(--md-badge-text-color);
     padding: var(--md-badge-padding-size);
     background-color: var(--md-primary-fg-color, #2FA4E7);

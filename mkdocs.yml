@@ -20,6 +20,7 @@ nav:
   - test/tags.md
   - test/theme.md
   - test/basic-caret-separator.md
+  - test/issues.md
 
 plugins:
 - search
