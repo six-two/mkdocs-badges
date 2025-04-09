@@ -6,6 +6,7 @@ theme:
   features:
     - content.code.copy
     - navigation.footer
+    - navigation.expand
 nav:
 # Hide the index page -> would otherwise result in two mkdocs-badges links
 - "": index.md

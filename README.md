@@ -46,6 +46,7 @@ pip install . && python -m unittest
 - Allow setting a custom separator with `separator` in your `mkdocs.yml`
 - Allow specifying badges in tables.
     This uses a different separator (by default `^`), which you can set using `table_separator` in your `mkdocs.yml`
+- Fix CSS bug 
 
 ### Version 0.4.4
 

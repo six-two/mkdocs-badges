@@ -29,7 +29,7 @@ a.badge:hover,
     display: block;
 }
 
-.badge .title {
+.badge .title, .badge .title a {
     color: var(--md-badge-text-color);
     padding: var(--md-badge-padding-size);
     background-color: gray;
