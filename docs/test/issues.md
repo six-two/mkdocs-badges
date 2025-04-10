@@ -18,6 +18,8 @@
 ```
 R|reflink badge|example_ref|
 |normal badge with reflink|should work|r:example_ref|
+
+[example_ref]: https://www.example.com
 ```
 
 R|reflink badge|example_ref|
@@ -32,3 +34,17 @@ R|reflink badge|example_ref|
 ```
 
 |[Link A](https://duckduckgo.com/)|[Simplified hostname demo](https://www.example.com)|
+
+---
+
+### Badges With Optional Angle Brackets
+
+```
+|Custom Badge With Angle Brackets|Simplified hostname demo|l:<https://github.com/six-two/mkdocs-badges>|
+L|Link Badge With Angle Brackets|<https://github.com/six-two/mkdocs-badges>|
+|Normal Badge With Angle Brackets|<https://github.com/six-two/mkdocs-badges>|
+```
+
+|Custom Badge With Angle Brackets|Simplified hostname demo|l:<https://github.com/six-two/mkdocs-badges>|
+L|Link Badge With Angle Brackets|<https://github.com/six-two/mkdocs-badges>|
+|Normal Badge With Angle Brackets|<https://github.com/six-two/mkdocs-badges>|

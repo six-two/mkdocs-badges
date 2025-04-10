@@ -35,6 +35,8 @@ def parse_badge_parts(parts: list[str]) -> ParsedBadge:
     link = None
     reflink = None
     html_classes = []
+    title = parts[1]
+    value = parts[2]
     attribute_list = parts[3:-1]
 
     for attribute in attribute_list:
@@ -58,12 +60,17 @@ def parse_badge_parts(parts: list[str]) -> ParsedBadge:
                 reflink = match.group(1)
         else:
             raise BadgeException(f"Unknown attribute: '{attribute}'")
-
+    
+    # Allow optional "<" and ">" around the link to prevent linter warnings
+    if link and link.startswith("<") and link.endswith(">"):
+        link = link[1:-1]
+    if badge_type == "L" and value.startswith("<") and value.endswith(">"):
+        value = value[1:-1]
 
     return ParsedBadge(
         badge_type,
-        parts[1],
-        parts[2],
+        title,
+        value,
         copy_text,
         link,
         reflink,
