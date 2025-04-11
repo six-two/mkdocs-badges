@@ -19,11 +19,15 @@
 R|reflink badge|example_ref|
 |normal badge with reflink|should work|r:example_ref|
 
+[this should be converted to a link][example_ref]
+
 [example_ref]: https://www.example.com
 ```
 
 R|reflink badge|example_ref|
 |normal badge with reflink|should work|r:example_ref|
+
+[this should be converted to a link][example_ref]
 
 [example_ref]: https://www.example.com
 

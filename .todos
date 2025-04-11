@@ -1,2 +1,4 @@
 - rework badge syntax? It currently can not be used in most contexts (lists, etc). Make configurable start (for example ` $[`) and an end (`]$`) that will be searched for when looking for badges anywhere.
 - document plugin config options (src/mkdocs_badges/plugin.py)
+- document which badge type to use when / how links work (wint normal badged)
+- add badge install types: winget, psim (Powershell Install-Module)
