@@ -16,7 +16,7 @@ If you want each badge to be on it's own line, add an empty line between the bad
 
 |Required version|0.3.0+|link:https://github.com/six-two/mkdocs-badges#notable-changes|.version|
 
-Simple badges are just a badge that does not react to clicks.
+Simple badges are just a badge that has no special behavior.
 
 Example markdown:
 
@@ -30,62 +30,114 @@ Result:
 |Example badge|works|
 </div>
 
+### Simple badge with link
 
-## Link badges
+The left or right side of the badge can also contain valid HTML or markdown content.
+So if you want to make a badge that shows a full URL (unlike a `L` badge, which will only show the hostname), you can do something like:
+```markdown
+|Simple badge with link|<https://github.com/six-two/mkdocs-badges>|
+```
+
+Result:
+
+|Simple badge with link|<https://github.com/six-two/mkdocs-badges>|
+
+### Simple badge with multiple links
+
+You can also use normal link syntax and you can put links on both sides of the badge:
+```
+|[UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier)|[f180147f-7c2e-4e4d-bd4e-f4420b90dea0](https://www.uuidtools.com/api/decode/f180147f-7c2e-4e4d-bd4e-f4420b90dea0)|
+```
+
+Result:
+
+|[UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier)|[f180147f-7c2e-4e4d-bd4e-f4420b90dea0](https://www.uuidtools.com/api/decode/f180147f-7c2e-4e4d-bd4e-f4420b90dea0)|
+
+### Simple badge with image
+
+You can also add HTML or markdown syntax like images as part of a badge.
+Example badge markdown:
+
+```
+|<img src="https://en.wikipedia.org/favicon.ico" width=15 height=15> Wikipedia page|<a href="https://en.wikipedia.org/wiki/MkDocs">MkDocs</a>|
+
+|Have You Tried|![](https://cdn.sstatic.net/Sites/stackoverflow/Img/favicon.ico) StackOverflow?|
+```
+
+|<img src="https://en.wikipedia.org/favicon.ico" width=15 height=15> Wikipedia page|<a href="https://en.wikipedia.org/wiki/MkDocs">MkDocs</a>|
+
+|Have You Tried|![](https://cdn.sstatic.net/Sites/stackoverflow/Img/favicon.ico) StackOverflow?|
+
+
+## Link badges (L)
 
 |Required version|0.3.0+|link:https://github.com/six-two/mkdocs-badges#notable-changes|.version|
+|Required version for angle brackets|0.4.5+|link:https://github.com/six-two/mkdocs-badges#notable-changes|.version|
 
-Link badges link to a given URL.
-They only have the (simplified version of) the hostname specified in the link as visible value
+Link badges are basically a shortcut for links with badges.
+They differ from normal badges with links in that the link's visible text is a (simplified version of) the hostname of the URL.
+On the right hand side, you have to specify an URL, optionally surrounded by angle brackets (`<` and `>`), otherwise an error will be thrown.
 
-Example markdown:
+Example link badges:
 
 ```markdown
 L|Bug Tracker|https://github.com/six-two/mkdocs-badges/issues|
-L|Simplified hostname demo|https://www.example.com|
+L|Simplified hostname demo|<https://www.example.com>|
+```
+
+This is similar[^1] to the following normal badges:
+```markdown
+|Bug Tracker|[github.com](https://github.com/six-two/mkdocs-badges/issues)|
+|Simplified hostname demo|[example.com](https://www.example.com)|
 ```
 
 Result:
 
 <div class=result>
 L|Bug Tracker|https://github.com/six-two/mkdocs-badges/issues|
-L|Simplified hostname demo|https://www.example.com|
+L|Simplified hostname demo|<https://www.example.com>|
 </div>
 
-## Reference link badges
+## Reference link badges (R)
 
 |Required version|0.3.0+|link:https://github.com/six-two/mkdocs-badges#notable-changes|.version|
 
-Reference link badges link to a given URL using reference links.
-They are similar to link badges, but display the reference name as value.
+Reference link badges (R) are another shortcut, similar to link badges (L).
+They differ in that they use reference syntax and show the reference name (not the host name) as value.
 
-**Warning**: Reference links rely on the underlying markdown parser.
-Thus, there badges may not work correctly when inside HTML (like a `<div>` element).
-To work araound this, make sure markdown parsing inside HTML is enabled, or only put he badges in `<span>` elements, which do (to my knowledge) not prevent the parsing of Markdown contents.
-
-Example markdown:
+Example reflink badge:
 
 ```markdown
 R|reflink badge|example_ref|
-|normal badge with reflink|should work|r:example_ref|
 
 [example_ref]: https://www.example.com
 ```
 
+This is similar[^1] to the following normal badge:
+```markdown
+|reflink badge|[example_ref][example_ref]|
+```
+
 Result:
 
 <span class=result>
 R|reflink badge|example_ref|
-|normal badge with reflink|should work|r:example_ref|
+</span>
+
+**Warning**: Reference links rely on the underlying markdown parser.
+Thus, there badges may not work correctly when inside HTML (like a `<div>` element).
+To work around this, make sure markdown parsing inside HTML is enabled, or only put he badges in `<span>` elements, which do (to my knowledge) not prevent the parsing of Markdown contents. If the parsing of reference links fails, the result will look like the following:
+
+<span class=result>
+R|reflink badge with non-existing target|example_ref_undefined|
 </span>
 
 
-
-## Copy badges
+## Copy badges (C)
 
 |Required version|0.3.0+|link:https://github.com/six-two/mkdocs-badges#notable-changes|.version|
 
-Copy badges copy their value to the users clipboard when clicked upon
+Copy badges copy their value (right side) to the user's clipboard when clicked upon.
 
 Example markdown:
 
@@ -102,7 +154,7 @@ C|Linux check ethernet settings|ip a s eth0|
 </span>
 
 
-## Install badges
+## Install badges (I)
 
 |Required version|0.3.0+|link:https://github.com/six-two/mkdocs-badges#notable-changes|.version|
 
@@ -158,7 +210,7 @@ plugins:
     install_badge_data: path/to/your-custom-install-badges.json
 ```
 
-## Tag badges
+## Tag badges (T)
 
 |Required version|0.3.3+|link:https://github.com/six-two/mkdocs-badges#notable-changes|.version|
 
@@ -318,3 +370,5 @@ Result:
 <!-- Link references -->
 [example_ref]: https://www.example.com
 
+<!-- Footnotes -->
+[^1]: There is a difference, in that a badge like a link (L) or reflink (R) badge have the link cover the entire badge. So it will also trigger, if you click the left side. For the similar normal badges, only the right side is part of the link.
