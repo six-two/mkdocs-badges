@@ -66,7 +66,7 @@ class BadgesPlugin(BasePlugin[BadgesPluginConfig]):
             raise PluginError(f"The 'table_separator' field needs to contain a single character, but has {len(self.config.table_separator)}: '{self.config.table_separator}'")
 
         if self.config.table_separator == "|":
-            raise PluginError(f"The 'table_separator' field is not allowed to be '|', since that character conflicts with Markdown's table syntax")
+            raise PluginError("The 'table_separator' field is not allowed to be '|', since that character conflicts with Markdown's table syntax")
 
         self.install_badge_manager = InstallBadgeManager()
         # load the defaults

@@ -41,12 +41,14 @@ pip install . && python -m unittest
 
 ## Notable changes
 
-### Head
+### Version 0.4.5
 
 - Allow setting a custom separator with `separator` in your `mkdocs.yml`
 - Allow specifying badges in tables.
     This uses a different separator (by default `^`), which you can set using `table_separator` in your `mkdocs.yml`
-- Fix CSS bug 
+- Fixed some CSS bugs
+- Link badges (L) with non-URL values now cause a warning (instead of a crash)
+- Allow adding optional angle brackets in link badges (L) to prevent [MD034 - Bare URL used](https://github.com/DavidAnson/markdownlint/blob/main/doc/md034.md) linter warnings
 
 ### Version 0.4.4
 

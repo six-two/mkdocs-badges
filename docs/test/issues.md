@@ -8,7 +8,8 @@
 |Simplified hostname demo 2|Simplified hostname demo|l:https://example.com|
 ```
 
-<!-- L|Simplified hostname demo|[Simplified hostname demo](https://www.example.com)| -->
+L|Simplified hostname demo|This is not actually a link badge|
+
 |Simplified hostname demo|[Simplified hostname demo](https://www.example.com)|
 
 |Simplified hostname demo 2|Simplified hostname demo|l:https://example.com|

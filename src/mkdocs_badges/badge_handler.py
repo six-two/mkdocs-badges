@@ -1,7 +1,7 @@
 from urllib.parse import urlparse
 
 # local files
-from . import warning_for_entry
+from . import warning_for_entry, LOGGER
 from .parser import ParserResultEntry, BadgeException, FileParser
 from .badge_html import generate_badge_html, generate_single_element_badge_html
 from .install_badge import InstallBadgeManager
@@ -88,9 +88,16 @@ def format_badge(badge_entry: ParserResultEntry, install_badge_manager: InstallB
     
     elif typ == "L":
         badge.assert_all_empty(LINK_BADGE_EMPTY_FIELDS)
-        simplified_host_name = get_simplified_hostname(badge.value)
+        value = badge.value
+        try:
+            value = get_simplified_hostname(value)
+            link = value
+        except Exception:
+            LOGGER.warning(f"Failed to parse hostname from link badge value: {value}")
+            link = None # The value may not be a link, so we drop it
+
         classes = ["badge-link", *badge.html_classes]
-        return generate_badge_html(badge.title, simplified_host_name, link=badge.value, extra_classes=classes)
+        return generate_badge_html(badge.title, value, link=link, extra_classes=classes)
 
     elif typ == "R":
         badge.assert_all_empty(REFLINK_BADGE_EMPTY_FIELDS)
@@ -125,7 +132,7 @@ def get_simplified_hostname(url: str) -> str:
     url = url.strip()
     simplified_host_name = urlparse(url).netloc
     if not simplified_host_name:
-        raise Exception(f"No hostname in URL: '{url}'")
+        raise UserWarning(f"No hostname in URL: '{url}'")
     
     # Remove unnecessary subdomains: for example "www.example.com" -> "example.com"
     parts = simplified_host_name.split(".")
