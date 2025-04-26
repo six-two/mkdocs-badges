@@ -34,11 +34,14 @@ def replace_badges(file_name: str, markdown: str, badge_separator: str, badge_ta
             try:
                 badge_html = format_badge(entry, *args)
                 # Indent it a bit to make debugging it easier when viewing the page's source
+
+                # depending on where the badge is from, we need to escape some characters (like '|' in tables)
+                for old, new in entry.replace_characters_before_html_output:
+                    badge_html = badge_html.replace(old, new)
+
                 if entry.only_replace_substring:
                     # Replace only part of the line (for table cells)
                     old_line = lines[entry.line_index]
-                    # We need to add escaping if text contains pipe characters, since they otherwise will break the table layout
-                    badge_html = badge_html.replace("|", "\\|")
                     new_line = old_line.replace(entry.only_replace_substring, badge_html)
                     if old_line != new_line:
                         lines[entry.line_index] = new_line

@@ -15,5 +15,6 @@ This is a list of badges:
 Table|with|inline badges
 ---|---|---
 cell 1 |cell 2 <^with inline^badge^> in it | cell3
-cell 1 |cell 2 <|with inline|badge|> in it | cell3
-
+cell 1 |cell 2 <\|with non working\|inline badge\|> in it | cell3
+cell 1 | <^two^badges^> <^one^cell^> | ^normal^badge^
+^normal badge^with \| pipe^ | test <^inline^badges\| with \| pipes^> too | cell 3

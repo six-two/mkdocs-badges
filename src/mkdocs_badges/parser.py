@@ -11,6 +11,7 @@ class ParserResultEntry(NamedTuple):
     line_index: int
     only_replace_substring: Optional[str] # We set this field if we do a replacement of a table cell (and not the whole line)
     parsed_badge: ParsedBadge
+    replace_characters_before_html_output: list[tuple[str,str]]
 
 class SplitPart(NamedTuple):
     raw: str # the original string, as it was read
@@ -22,6 +23,7 @@ TABLE_CELL_REGEX = r"\s*:?-+:?\s*"
 TABLE_HEADER_REGEX = re.compile(r"^\s*\|?"+ TABLE_CELL_REGEX + r"(\|" + TABLE_CELL_REGEX + ")+\|?\s*$")
 
 INLINE_BADGE_EXTRACTOR = re.compile(r"<.?\|.*?\|>")
+INLINE_BADGE_EXTRACTOR_TABLE = re.compile(r"<.?\^.*?\^>")
 
 CLASS_ATTR_REGEX = re.compile(r"^(?:\.|(?:class:))(.*)$")
 COPY_ATTR_REGEX = re.compile(r"^c(?:opy)?:(.*)$")
@@ -128,13 +130,14 @@ class FileParser:
             return [single_badge]
         
         badges = []
-        for inline_badge_string in INLINE_BADGE_EXTRACTOR.findall(line):
-            print("Possible inline badge:", inline_badge_string)
+        extractor_regex = INLINE_BADGE_EXTRACTOR_TABLE if self.is_table else INLINE_BADGE_EXTRACTOR
+        for inline_badge_string in extractor_regex.findall(line):
+            # print("Possible inline badge:", inline_badge_string)
             inline_badge_string_without_angle_brackets = inline_badge_string[1:-1]
             if badge := self.try_parse_as_single_badge(inline_badge_string_without_angle_brackets, index, False):
                 badge = badge._replace(only_replace_substring=inline_badge_string)
                 badges.append(badge)
-                print("Inline badge parsed")
+                # print("Inline badge parsed")
         return badges
 
     def try_parse_as_single_badge(self, line: str, index: int, is_whole_line: bool) -> Optional[ParserResultEntry]:
@@ -170,6 +173,7 @@ class FileParser:
                     line_index=index,
                     parsed_badge=parsed_badge,
                     only_replace_substring=None, # will be set outside of this method if required
+                    replace_characters_before_html_output=[], # will be set outside of this method if required
                 )
             except Exception as ex:
                 # Parsing failed, let's give some info to help with debugging
@@ -231,6 +235,7 @@ class FileParser:
                 if self.is_table:
                     # For a table we try to treat every column as a line, since they all could contain badges
                     try:
+                        # tb = self.try_parse_line(line, index)
                         # We do not do a simple string split, since there may be escaped separators ('\|') in the line
                         for cell in self.split_by_separator(line, "|"):
                             # Allow (ignore) whitespace between table separators and cell contents
@@ -238,9 +243,16 @@ class FileParser:
                             # We treat every cell like its own line (the method inside handles not actually replacing the full line later)
                             # @TODO: handle inline badges in tables later
                             if result := self.try_parse_as_single_badge(cell_string, index, False):
-                                # Use the actual read raw data, so that I do not have to undo ambiguous unescaping (caused wierd bugs)
-                                result = result._replace(only_replace_substring=cell.raw.strip())
+                                result = result._replace(
+                                    # Use the actual read raw data, so that I do not have to undo ambiguous unescaping (caused wierd bugs)
+                                    only_replace_substring=cell.raw.strip(),
+                                    # As a tradeoff I have to escape any pipes ('|') afterwards
+                                    replace_characters_before_html_output=[("|", "\\|")]
+                                )
                                 results.append(result)
+                            elif badges := self.try_parse_line(cell.raw.strip(), index):
+                                for badge in badges:
+                                    results.append(badge)
                     except Exception as ex:
                         warning_for_location(self.file_name, index, f"Error splitting table columns in line '{line}': {ex}")
                 else:
