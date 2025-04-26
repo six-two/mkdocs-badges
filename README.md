@@ -43,7 +43,8 @@ pip install . && python -m unittest
 
 ### HEAD
 
-- Allow inline badges by surrounding them with `<`, `>`
+- Allow inline badges by surrounding them with `[` and `]`.
+    These values can be changed with the new settings `inline_badge_start` and `inline_badge_end`
 
 ### Version 0.4.5
 

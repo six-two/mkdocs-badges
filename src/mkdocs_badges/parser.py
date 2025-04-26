@@ -22,9 +22,6 @@ class SplitPart(NamedTuple):
 TABLE_CELL_REGEX = r"\s*:?-+:?\s*"
 TABLE_HEADER_REGEX = re.compile(r"^\s*\|?"+ TABLE_CELL_REGEX + r"(\|" + TABLE_CELL_REGEX + ")+\|?\s*$")
 
-INLINE_BADGE_EXTRACTOR = re.compile(r"<.?\|.*?\|>")
-INLINE_BADGE_EXTRACTOR_TABLE = re.compile(r"<.?\^.*?\^>")
-
 CLASS_ATTR_REGEX = re.compile(r"^(?:\.|(?:class:))(.*)$")
 COPY_ATTR_REGEX = re.compile(r"^c(?:opy)?:(.*)$")
 LINK_ATTR_REGEX = re.compile(r"^l(?:ink)?:(.*)$")
@@ -83,7 +80,7 @@ def parse_badge_parts(parts: list[str]) -> ParsedBadge:
 
 
 class FileParser:
-    def __init__(self, file_name: str, file_content_lines: list[str], badge_separator: str, badge_table_separator: str):
+    def __init__(self, file_name: str, file_content_lines: list[str], badge_separator: str, badge_table_separator: str, inline_badge_start: str, inline_badge_end: str):
         self.file_name = file_name
         # Add an empty line, since for the table header check we need to look ahead one line
         # This is way easier than specialized edge case handling rules
@@ -93,7 +90,17 @@ class FileParser:
 
         self.badge_separator = badge_separator
         self.badge_table_separator = badge_table_separator
+        self.inline_badge_start = inline_badge_start
+        self.inline_badge_end = inline_badge_end
         self.escape_character = "\\"
+
+        # Generate the regexes for inline badges
+        escaped_start = re.escape(inline_badge_start)
+        escaped_end = re.escape(inline_badge_end)
+        escaped_separator = re.escape(badge_separator)
+        escaped_table_separator = re.escape(badge_table_separator)
+        self.inline_normal_badge_regex = re.compile(f"{escaped_start}.?{escaped_separator}.*?{escaped_separator}{escaped_end}")
+        self.inline_table_badge_regex = re.compile(f"{escaped_start}.?{escaped_table_separator}.*?{escaped_table_separator}{escaped_end}")
 
     def should_process_line(self, index: int) -> bool:
         line = self.lines[index]
@@ -130,10 +137,12 @@ class FileParser:
             return [single_badge]
         
         badges = []
-        extractor_regex = INLINE_BADGE_EXTRACTOR_TABLE if self.is_table else INLINE_BADGE_EXTRACTOR
-        for inline_badge_string in extractor_regex.findall(line):
+        start_len = len(self.inline_badge_start)
+        end_len = len(self.inline_badge_end)
+        inline_badge_regex = self.inline_table_badge_regex if self.is_table else self.inline_normal_badge_regex
+        for inline_badge_string in inline_badge_regex.findall(line):
             # print("Possible inline badge:", inline_badge_string)
-            inline_badge_string_without_angle_brackets = inline_badge_string[1:-1]
+            inline_badge_string_without_angle_brackets = inline_badge_string[start_len:-end_len]
             if badge := self.try_parse_as_single_badge(inline_badge_string_without_angle_brackets, index, False):
                 badge = badge._replace(only_replace_substring=inline_badge_string)
                 badges.append(badge)
@@ -241,7 +250,6 @@ class FileParser:
                             # Allow (ignore) whitespace between table separators and cell contents
                             cell_string = cell.interpreted.strip()
                             # We treat every cell like its own line (the method inside handles not actually replacing the full line later)
-                            # @TODO: handle inline badges in tables later
                             if result := self.try_parse_as_single_badge(cell_string, index, False):
                                 result = result._replace(
                                     # Use the actual read raw data, so that I do not have to undo ambiguous unescaping (caused wierd bugs)

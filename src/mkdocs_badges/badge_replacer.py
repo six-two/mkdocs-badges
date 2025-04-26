@@ -6,10 +6,10 @@ from .formatter import format_badge
 BADGE_GROUP_START = '<span class="badge-group">'
 BADGE_GROUP_END = '</span>'
 
-def replace_badges(file_name: str, markdown: str, badge_separator: str, badge_table_separator: str, *args) -> str:
+def replace_badges(file_name: str, markdown: str, badge_separator: str, badge_table_separator: str, inline_badge_start: str, inline_badge_end: str, *args) -> str:
     lines = markdown.split("\n")
 
-    parser_result_list = FileParser(file_name, lines, badge_separator, badge_table_separator).process()
+    parser_result_list = FileParser(file_name, lines, badge_separator, badge_table_separator, inline_badge_start, inline_badge_end).process()
     if parser_result_list:
         return BadgeReplacer().get_replaced_markdown(lines, parser_result_list, *args)
     else:
