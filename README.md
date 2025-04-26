@@ -41,6 +41,10 @@ pip install . && python -m unittest
 
 ## Notable changes
 
+### HEAD
+
+- Allow inline badges by surrounding them with `<`, `>`
+
 ### Version 0.4.5
 
 - Allow setting a custom separator with `separator` in your `mkdocs.yml`

@@ -22,6 +22,7 @@ nav:
   - test/theme.md
   - test/basic-caret-separator.md
   - test/issues.md
+  - test/inline-badges.md
 
 plugins:
 - search

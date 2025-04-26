@@ -21,6 +21,8 @@ class SplitPart(NamedTuple):
 TABLE_CELL_REGEX = r"\s*:?-+:?\s*"
 TABLE_HEADER_REGEX = re.compile(r"^\s*\|?"+ TABLE_CELL_REGEX + r"(\|" + TABLE_CELL_REGEX + ")+\|?\s*$")
 
+INLINE_BADGE_EXTRACTOR = re.compile(r"<.?\|.*?\|>")
+
 CLASS_ATTR_REGEX = re.compile(r"^(?:\.|(?:class:))(.*)$")
 COPY_ATTR_REGEX = re.compile(r"^c(?:opy)?:(.*)$")
 LINK_ATTR_REGEX = re.compile(r"^l(?:ink)?:(.*)$")
@@ -121,7 +123,21 @@ class FileParser:
         # If we found no reason not to process the line, we should process it
         return True
 
-    def try_parse_line(self, line: str, index: int) -> Optional[ParserResultEntry]:
+    def try_parse_line(self, line: str, index: int) -> list[ParserResultEntry]:
+        if single_badge := self.try_parse_as_single_badge(line, index, True):
+            return [single_badge]
+        
+        badges = []
+        for inline_badge_string in INLINE_BADGE_EXTRACTOR.findall(line):
+            print("Possible inline badge:", inline_badge_string)
+            inline_badge_string_without_angle_brackets = inline_badge_string[1:-1]
+            if badge := self.try_parse_as_single_badge(inline_badge_string_without_angle_brackets, index, False):
+                badge = badge._replace(only_replace_substring=inline_badge_string)
+                badges.append(badge)
+                print("Inline badge parsed")
+        return badges
+
+    def try_parse_as_single_badge(self, line: str, index: int, is_whole_line: bool) -> Optional[ParserResultEntry]:
         try:
             line = line.rstrip()
             badge_separator = self.badge_table_separator if self.is_table else self.badge_separator
@@ -139,7 +155,7 @@ class FileParser:
 
             # Check if the next line is a table header indicator
             next_line = self.lines[index + 1]
-            if TABLE_HEADER_REGEX.match(next_line):
+            if is_whole_line and TABLE_HEADER_REGEX.match(next_line):
                 # This line is probably the table header, so we do not try to parse it
                 return None
             
@@ -220,14 +236,14 @@ class FileParser:
                             # Allow (ignore) whitespace between table separators and cell contents
                             cell_string = cell.interpreted.strip()
                             # We treat every cell like its own line (the method inside handles not actually replacing the full line later)
-                            if result := self.try_parse_line(cell_string, index):
+                            # @TODO: handle inline badges in tables later
+                            if result := self.try_parse_as_single_badge(cell_string, index, False):
                                 # Use the actual read raw data, so that I do not have to undo ambiguous unescaping (caused wierd bugs)
                                 result = result._replace(only_replace_substring=cell.raw.strip())
                                 results.append(result)
                     except Exception as ex:
                         warning_for_location(self.file_name, index, f"Error splitting table columns in line '{line}': {ex}")
                 else:
-                    if result := self.try_parse_line(line, index):
-                        results.append(result)
+                    results += self.try_parse_line(line, index)
 
         return results

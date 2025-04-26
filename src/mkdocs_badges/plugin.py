@@ -1,3 +1,4 @@
+import traceback
 # pip dependency
 import mkdocs
 from mkdocs.config.config_options import Type, ExtraScriptValue
@@ -97,7 +98,7 @@ class BadgesPlugin(BasePlugin[BadgesPluginConfig]):
 
             return markdown
         except Exception as error:
-            raise mkdocs.exceptions.PluginError(str(error))
+            raise mkdocs.exceptions.PluginError("Uncaught exception in badges_plugin::on_page_markdown.\n" + traceback.format_exc())
 
     def on_post_build(self, config: MkDocsConfig) -> None:
         """
