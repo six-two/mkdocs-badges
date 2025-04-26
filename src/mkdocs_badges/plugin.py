@@ -12,7 +12,7 @@ from mkdocs.exceptions import PluginError
 from . import warning, disable_warnings
 from .install_badge import InstallBadgeManager
 from .assets import BADGE_CSS, BADGE_JS, INSTALL_BADGE_DATA, copy_asset_if_target_file_does_not_exist
-from .badge_handler import replace_badges
+from .badge_replacer import replace_badges
 from .tag_badge import TagBadgeManager
 
 DEFAULT_BADGE_CSS_PATH = "assets/stylesheets/badge.css"
