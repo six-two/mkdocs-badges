@@ -95,12 +95,13 @@ class FileParser:
         self.escape_character = "\\"
 
         # Generate the regexes for inline badges
+        badge_type = "[a-zA-Z]?"
         escaped_start = re.escape(inline_badge_start)
         escaped_end = re.escape(inline_badge_end)
         escaped_separator = re.escape(badge_separator)
         escaped_table_separator = re.escape(badge_table_separator)
-        self.inline_normal_badge_regex = re.compile(f"{escaped_start}.?{escaped_separator}.*?{escaped_separator}{escaped_end}")
-        self.inline_table_badge_regex = re.compile(f"{escaped_start}.?{escaped_table_separator}.*?{escaped_table_separator}{escaped_end}")
+        self.inline_normal_badge_regex = re.compile(f"{escaped_start}{badge_type}{escaped_separator}.*?{escaped_separator}{escaped_end}")
+        self.inline_table_badge_regex = re.compile(f"{escaped_start}{badge_type}{escaped_table_separator}.*?{escaped_table_separator}{escaped_end}")
 
     def should_process_line(self, index: int) -> bool:
         line = self.lines[index]

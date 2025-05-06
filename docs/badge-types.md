@@ -3,7 +3,7 @@ hide:
 - tags
 ---
 
-# Badge Types
+# Badge types
 
 There are multiple different badge types, which different syntaxes.
 All badges need to be in their now line and have no indent / leading whitespace.

@@ -8,7 +8,7 @@ inline_badge_start: "["
 inline_badge_end: "]"
 ```
 
-here is a <|inline|badge|> in the middle of a line
+here is a [|inline|badge|] in the middle of a line
 
 Here is a line that contains the same badge twice
 

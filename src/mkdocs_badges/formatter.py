@@ -39,8 +39,8 @@ def format_badge(badge_entry: ParserResultEntry, install_badge_manager: InstallB
         badge.assert_all_empty(LINK_BADGE_EMPTY_FIELDS)
         value = badge.value
         try:
-            value = get_simplified_hostname(value)
             link = value
+            value = get_simplified_hostname(value)
         except Exception:
             LOGGER.warning(f"Failed to parse hostname from link badge value: {value}")
             link = None # The value may not be a link, so we drop it

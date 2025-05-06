@@ -34,10 +34,10 @@ plugins:
     # disable_warnings: True
     
     # # For testing new inline badges
-    separator: ";"
-    table_separator: "$"
-    inline_badge_start: "<"
-    inline_badge_end: ">"
+    # separator: ";"
+    # table_separator: "$"
+    # inline_badge_start: "<"
+    # inline_badge_end: ">"
 - tags:
     tags_file: test/tags.md
 
