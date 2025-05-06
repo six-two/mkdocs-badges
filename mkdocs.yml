@@ -11,7 +11,8 @@ nav:
 # Hide the index page -> would otherwise result in two mkdocs-badges links
 - "": index.md
 - setup.md
-- badges.md
+- badge-types.md
+- badge-syntax.md
 - styling.md
 - migration.md
 - "Tests":
@@ -31,18 +32,12 @@ plugins:
     install_badge_data: tests/extra-install-badges.json
     # async: False
     # disable_warnings: True
-    # separator: "^"
-    # table_separator: "+"
-    separator: "|"
-    table_separator: "^"
-    inline_badge_start: "<"
-    inline_badge_end: ">"
     
     # # For testing new inline badges
-    # separator: ";"
-    # table_separator: "$"
-    # inline_badge_start: "["
-    # inline_badge_end: "]"
+    separator: ";"
+    table_separator: "$"
+    inline_badge_start: "<"
+    inline_badge_end: ">"
 - tags:
     tags_file: test/tags.md
 
