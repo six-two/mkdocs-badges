@@ -19,10 +19,15 @@ The documentation also serves as a test of the plugin, especially the files unde
 
 Build the documentation with the latest source code:
 ```bash
-pip install . && mkdocs serve -t <theme>
+poetry install && poetry run mkdocs serve -t <theme>
 ```
 
 Themes that should work are `mkdocs`, `readthedocs`, and `material`.
+
+Lint source code:
+```bash
+poetry run mypy
+```
 
 ### Unit tests
 
@@ -30,7 +35,7 @@ The GitHub repository now contains some unit test.
 You can run them against the current code with the following command (issued in the root directory of the repository):
 
 ```bash
-pip install . && python -m unittest
+poetry install && poetry run python -m unittest
 ```
 
 ## Known issues
@@ -40,6 +45,11 @@ pip install . && python -m unittest
     This seems to be an issue with <https://github.com/mlcheng/js-toast/> (used in `src/mkdocs_badges/assets/badge.js`) which seems no longer maintained.
 
 ## Notable changes
+
+### HEAD
+
+- Migrated build process to poetry
+- Fixed unit tests
 
 ### Version 0.5.0
 

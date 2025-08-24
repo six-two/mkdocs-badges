@@ -38,7 +38,7 @@ plugins:
     # table_separator: "$"
     # inline_badge_start: "<"
     # inline_badge_end: ">"
-- tags
+# - tags
 
 # SEE https://squidfunk.github.io/mkdocs-material/reference/admonitions/
 markdown_extensions:

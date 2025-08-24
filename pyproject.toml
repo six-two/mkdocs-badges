@@ -1,3 +1,31 @@
+[project]
+name = "mkdocs-badges"
+version = "0.5.0"
+description = "Add badges to your MkDocs page"
+authors = [
+    {name = "six-two",email = "pip@six-two.dev"}
+]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "mkdocs (>=1.5.0)"
+]
+license = "MIT"
+homepage = "https://github.com/six-two/mkdocs-badges"
+repository = "https://github.com/six-two/mkdocs-badges"
+
+
 [build-system]
-requires = ["setuptools>=42"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+mkdocs-material = "^9.6.18"
+mypy = "^1.17.1"
+
+[tool.poetry.plugins."mkdocs.plugins"]
+badges = "mkdocs_badges:BadgesPlugin"
+
+[tool.mypy]
+files = ["src/mkdocs_badges/**/*.py"]
+ignore_missing_imports = true

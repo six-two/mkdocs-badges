@@ -6,18 +6,16 @@
 cd "$( dirname "${BASH_SOURCE[0]}" )" || exit
 
 # install the dependencies
-python3 -m pip install -r requirements.txt
+python3 -m pip install poetry
+python3 -m poetry install
 
-if [[ -z "$DEPLOY_STABLE" ]]; then
-    echo "[*] Compiling current development version of this plugin"
-    python3 -m pip install .
-else
+if [[ -n "$DEPLOY_STABLE" ]]; then
     echo "[*] Downloading latest released version of this plugin"
-    python3 -m pip install -U mkdocs-badges
+    python3 -m poetry run pip install --force-reinstall --no-deps --upgrade mkdocs-badges
 fi
 
 # Vercel prefers outputs to be in public/
-python3 -m mkdocs build -d public
+poetry run mkdocs build -d public
 
 if [[ -n "$1" ]]; then
     echo "[*] Starting web server on 127.0.0.1:$1"
