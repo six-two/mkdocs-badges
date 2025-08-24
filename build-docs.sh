@@ -17,7 +17,7 @@ else
 fi
 
 # Vercel prefers outputs to be in public/
-mkdocs build -d public
+python3 -m mkdocs build -d public
 
 if [[ -n "$1" ]]; then
     echo "[*] Starting web server on 127.0.0.1:$1"
