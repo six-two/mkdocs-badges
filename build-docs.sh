@@ -6,14 +6,14 @@
 cd "$( dirname "${BASH_SOURCE[0]}" )" || exit
 
 # install the dependencies
-pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 
 if [[ -z "$DEPLOY_STABLE" ]]; then
     echo "[*] Compiling current development version of this plugin"
-    pip install .
+    python3 -m pip install .
 else
     echo "[*] Downloading latest released version of this plugin"
-    pip install -U mkdocs-badges
+    python3 -m pip install -U mkdocs-badges
 fi
 
 # Vercel prefers outputs to be in public/
