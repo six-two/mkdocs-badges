@@ -73,5 +73,10 @@
         "title": "Python package (Gitlab)",
         "link_template": "https://gitlab.com/{{value}}",
         "command_template": "pip install git+https://gitlab.com/six-two/mkdocs-badges"
+    },
+     "winget": {
+        "title": "Winget",
+        "link_template": "https://winstall.app/apps/{{value}}",
+        "command_template": "winget install --id {{value}} -e"
     }
 }

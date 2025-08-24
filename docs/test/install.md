@@ -49,6 +49,9 @@ I|pip_github|six-two/mkdocs-badges|
 Python package (custom Gitlab URL):
 I|pip_gitlab|todo/honestly-I-have-not-found-something-yet|
 
+Winget package:
+I|winget|Git.Git|
+
 ## Custom
 
 Custom test:
