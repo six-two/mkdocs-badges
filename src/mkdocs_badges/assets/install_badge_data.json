@@ -67,12 +67,12 @@
     "pip_github": {
         "title": "Python package (Github)",
         "link_template": "https://github.com/{{value}}",
-        "command_template": "pip install git+https://github.com/six-two/mkdocs-badges"
+        "command_template": "pip install git+https://github.com/{{value}}"
     },
     "pip_gitlab": {
         "title": "Python package (Gitlab)",
         "link_template": "https://gitlab.com/{{value}}",
-        "command_template": "pip install git+https://gitlab.com/six-two/mkdocs-badges"
+        "command_template": "pip install git+https://gitlab.com/{{value}}"
     },
      "winget": {
         "title": "Winget",
