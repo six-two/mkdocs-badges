@@ -1,12 +1,12 @@
 {
     "custom_test": {
         "title": "Custom Install Badge",
-        "link_template": "https://example.com/",
-        "command_template": "echo '{{value}}'"
+        "link_template": "https://example.com/1/{{value}}",
+        "command_template": "echo '1={{value}}'"
     },
     "custom-2": {
         "title": "Custom Install Badge 2",
-        "link_template": "https://example.com/",
-        "command_template": "echo '{{value}}'"
+        "link_template": "http://example.com/2/{{value}}",
+        "command_template": "echo '2={{value}}'"
     }
 }

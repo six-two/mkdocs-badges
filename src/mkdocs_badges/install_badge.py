@@ -1,21 +1,29 @@
 import json
 # local files
-from . import warning_for_entry
+from . import warning_for_entry, warning
 from .badge_html import generate_badge_html
 from .parser import ParserResultEntry
 
+PLACEHOLDER = "{{value}}"
 
 class InstallBadgeData:
     def __init__(self, title: str, link_template: str, command_template: str) -> None:
         self.title = title
         self.link_template = link_template
         self.command_template = command_template
+        if PLACEHOLDER not in link_template:
+            warning(f"Install badge type '{title}' does not contain placeholder '{PLACEHOLDER}' in 'link_template' field. This is likely a bug. Please check the value '{link_template}'")
+        if not link_template.startswith("http://") and not link_template.startswith("https://"):
+            warning(f"Install badge type '{title}' has a URL in the 'link_template' field that does not start with 'http://' or 'https://'. This is likely a bug. Please check the value '{link_template}'")
+
+        if PLACEHOLDER not in command_template:
+            warning(f"Install badge type '{title}' does not contain placeholder '{PLACEHOLDER}' in 'command_template' field. This is likely a bug. Please check the value '{command_template}'")
 
     def get_link(self, value: str) -> str:
-        return self.link_template.replace("{{value}}", value)
+        return self.link_template.replace(PLACEHOLDER, value)
 
     def get_command(self, value: str) -> str:
-        return self.command_template.replace("{{value}}", value)
+        return self.command_template.replace(PLACEHOLDER, value)
 
 
 class InstallBadgeManager:

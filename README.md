@@ -43,6 +43,7 @@ pip install . && python -m unittest
 
 ### HEAD
 
+- Added some sanity checks when parsing badge data
 - Added `winget` install badge data
 - Allow inline badges by surrounding them with `[` and `]`.
     These values can be changed with the new settings `inline_badge_start` and `inline_badge_end` in your `mkdocs.yml`
