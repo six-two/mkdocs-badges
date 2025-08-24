@@ -41,7 +41,7 @@ pip install . && python -m unittest
 
 ## Notable changes
 
-### HEAD
+### Version 0.5.0
 
 - Allow inline badges by surrounding them with `[` and `]`.
     These values can be changed with the new settings `inline_badge_start` and `inline_badge_end` in your `mkdocs.yml`
