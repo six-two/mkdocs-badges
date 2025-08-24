@@ -15,7 +15,7 @@ if [[ -n "$DEPLOY_STABLE" ]]; then
 fi
 
 # Vercel prefers outputs to be in public/
-poetry run mkdocs build -d public
+python3 -m poetry run mkdocs build -d public
 
 if [[ -n "$1" ]]; then
     echo "[*] Starting web server on 127.0.0.1:$1"
