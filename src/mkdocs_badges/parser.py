@@ -123,7 +123,7 @@ class FileParser:
 
         if ls_line != line:
             # This line is indented (probably a code block). Do not process
-            return False
+            return True # @TODO: how to handle code blocks?
 
         if (not self.is_table) and TABLE_HEADER_REGEX.match(line):
             # This is probably the start of a table. This line should not be processed

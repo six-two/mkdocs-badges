@@ -28,6 +28,12 @@ cell 1 | [^two^badges^] [^one^cell^] | ^normal^badge^
 ^normal badge^with \| pipe^ | test [^inline^badges \| with \| pipes^] too | cell 3
 ^normal badge^with \^ caret^ | test [^inline^badges\| with \^ caret^] too | cell 3
 
+!!! note "Admonition"
+
+    [|badge|admonition1|]     [|badge|admonition2|]
+
+    This text is part of the admonition
+
 ## With different mkdocs.yml
 
 This works with the following values:
