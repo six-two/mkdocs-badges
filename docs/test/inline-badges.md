@@ -30,9 +30,27 @@ cell 1 | [^two^badges^] [^one^cell^] | ^normal^badge^
 
 !!! note "Admonition"
 
-    [|badge|admonition1|]     [|badge|admonition2|]
+    L|normal badge|https://in-admonition.example.com/|
+    [|inline badge|admonition1|]     [|inline badge|admonition2|]
 
     This text is part of the admonition
+
+
+- List item 1 [|works|true|] 
+    - List item 1.1 [|works|true|]
+
+Code block:
+
+    Indented code block. Normally should not work, but too hard to detect [|works|sadly yes|]
+
+=== "Tab 1"
+
+    |full badge|works|
+    Inline badge [|works|too|]
+
+=== "Tab 2"
+
+    has no badges
 
 ## With different mkdocs.yml
 

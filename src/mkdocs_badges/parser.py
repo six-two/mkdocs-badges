@@ -80,7 +80,7 @@ def parse_badge_parts(parts: list[str]) -> ParsedBadge:
 
 
 class FileParser:
-    def __init__(self, file_name: str, file_content_lines: list[str], badge_separator: str, badge_table_separator: str, inline_badge_start: str, inline_badge_end: str):
+    def __init__(self, file_name: str, file_content_lines: list[str], badge_separator: str, badge_table_separator: str, inline_badge_start: str, inline_badge_end: str, ignore_lines_starting_with_whitespace: bool):
         self.file_name = file_name
         # Add an empty line, since for the table header check we need to look ahead one line
         # This is way easier than specialized edge case handling rules
@@ -93,6 +93,7 @@ class FileParser:
         self.inline_badge_start = inline_badge_start
         self.inline_badge_end = inline_badge_end
         self.escape_character = "\\"
+        self.ignore_lines_starting_with_whitespace = ignore_lines_starting_with_whitespace
 
         # Generate the regexes for inline badges
         badge_type = "[a-zA-Z]?"
@@ -121,9 +122,9 @@ class FileParser:
             # Do not parse badges in fenced code blocks
             return False
 
-        if ls_line != line:
-            # This line is indented (probably a code block). Do not process
-            return True # @TODO: how to handle code blocks?
+        if self.ignore_lines_starting_with_whitespace and ls_line != line:
+            # This line is indented and may be a code block. But could also be a list, admonition, tab, etc depending on parsing rules. So we let the user choose via ignore_lines_starting_with_whitespace if it should be processed
+            return False
 
         if (not self.is_table) and TABLE_HEADER_REGEX.match(line):
             # This is probably the start of a table. This line should not be processed
@@ -152,7 +153,7 @@ class FileParser:
 
     def try_parse_as_single_badge(self, line: str, index: int, is_whole_line: bool) -> Optional[ParserResultEntry]:
         try:
-            line = line.rstrip()
+            line = line.strip()
             badge_separator = self.badge_table_separator if self.is_table else self.badge_separator
 
             # Check if the line has pipe "|" symbols at the beginning and ending

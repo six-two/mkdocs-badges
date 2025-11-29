@@ -7,9 +7,10 @@ BADGE_TABLE_SEPARATOR = "^"
 FILE_NAME = "TestFileParser"
 INLINE_BADGE_START = "["
 INLINE_BADGE_END = "]"
+ignore_lines_starting_with_whitespace = False
 
 def parse_lines(lines: list[str]):
-    return FileParser(FILE_NAME, lines, BADGE_SEPARATOR, BADGE_TABLE_SEPARATOR, INLINE_BADGE_START, INLINE_BADGE_END).process()
+    return FileParser(FILE_NAME, lines, BADGE_SEPARATOR, BADGE_TABLE_SEPARATOR, INLINE_BADGE_START, INLINE_BADGE_END, ignore_lines_starting_with_whitespace).process()
 
 
 class TestFileParser(unittest.TestCase):

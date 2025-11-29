@@ -48,6 +48,10 @@ poetry install && poetry run python -m unittest
 
 ### HEAD
 
+- Parse lines starting with whitespace (lists, admonitions, etc.), which were previously ignored.
+    This may cause issues if you use indented code blocks, since any badges in them will be replaced and visible as HTML code.
+    To fix this I recommend you use a fenced code block (using triple backticks).
+    You can also revert to the old behavior by setting the new option `ignore_lines_starting_with_whitespace` to true.
 - Migrated build process to poetry
 - Fixed unit tests
 

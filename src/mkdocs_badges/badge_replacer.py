@@ -6,10 +6,10 @@ from .formatter import format_badge
 BADGE_GROUP_START = '<span class="badge-group">'
 BADGE_GROUP_END = '</span>'
 
-def replace_badges(file_name: str, markdown: str, badge_separator: str, badge_table_separator: str, inline_badge_start: str, inline_badge_end: str, *args) -> str:
+def replace_badges(file_name: str, markdown: str, badge_separator: str, badge_table_separator: str, inline_badge_start: str, inline_badge_end: str, ignore_lines_starting_with_whitespace: bool, *args) -> str:
     lines = markdown.split("\n")
 
-    parser_result_list = FileParser(file_name, lines, badge_separator, badge_table_separator, inline_badge_start, inline_badge_end).process()
+    parser_result_list = FileParser(file_name, lines, badge_separator, badge_table_separator, inline_badge_start, inline_badge_end, ignore_lines_starting_with_whitespace).process()
     if parser_result_list:
         return BadgeReplacer().get_replaced_markdown(lines, parser_result_list, *args)
     else:
@@ -63,8 +63,9 @@ class BadgeReplacer:
         if entry.only_replace_substring:
             self.do_inline_badge_replace(entry, badge_html)
         else:
-            # Just replace the entire line
-            self.line = badge_html
+            # Just replace the entire line, but keep the leading whitespace
+            left_whitespace_length = len(self.line) - len(self.line.lstrip())
+            self.line = self.line[:left_whitespace_length] + badge_html
 
     def do_inline_badge_replace(self, entry: ParserResultEntry, badge_html: str) -> None:
         try:

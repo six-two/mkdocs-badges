@@ -37,6 +37,8 @@ class BadgesPluginConfig(Config):
     table_separator = Type(str, default="^")
     inline_badge_start = Type(str, default="[")
     inline_badge_end = Type(str, default="]")
+    # Skip lines starting with whitespace. This is likely not wanted and just here for backwards compatibility
+    ignore_lines_starting_with_whitespace = Type(bool, default=False)
 
 
 class BadgesPlugin(BasePlugin[BadgesPluginConfig]):
@@ -93,7 +95,7 @@ class BadgesPlugin(BasePlugin[BadgesPluginConfig]):
         try:
             if self.config.enabled:
                 file_name = page.file.src_path
-                markdown = replace_badges(file_name, markdown, self.config.separator, self.config.table_separator, self.config.inline_badge_start, self.config.inline_badge_end, self.install_badge_manager, self.tag_badge_manager)
+                markdown = replace_badges(file_name, markdown, self.config.separator, self.config.table_separator, self.config.inline_badge_start, self.config.inline_badge_end, self.config.ignore_lines_starting_with_whitespace, self.install_badge_manager, self.tag_badge_manager)
                 self.tag_badge_manager.apply_tags_to_page(page)
             else:
                 warning("Plugin is disabled")
