@@ -46,7 +46,7 @@ poetry install && poetry run python -m unittest
 
 ## Notable changes
 
-### HEAD
+### Version 0.5.1
 
 - Parse lines starting with whitespace (lists, admonitions, etc.), which were previously ignored.
     This may cause issues if you use indented code blocks, since any badges in them will be replaced and visible as HTML code.
