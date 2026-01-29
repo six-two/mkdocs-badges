@@ -20,7 +20,7 @@ class SplitPart(NamedTuple):
 # Optional whitespace, optional alignment, at least three dashes, optional alignment, optional whitespace
 # Update from #4: It seems to be possible to just use a single dash
 TABLE_CELL_REGEX = r"\s*:?-+:?\s*"
-TABLE_HEADER_REGEX = re.compile(r"^\s*\|?"+ TABLE_CELL_REGEX + r"(\|" + TABLE_CELL_REGEX + ")+\|?\s*$")
+TABLE_HEADER_REGEX = re.compile(r"^\s*\|?"+ TABLE_CELL_REGEX + r"(\|" + TABLE_CELL_REGEX + r")+\|?\s*$")
 
 CLASS_ATTR_REGEX = re.compile(r"^(?:\.|(?:class:))(.*)$")
 COPY_ATTR_REGEX = re.compile(r"^c(?:opy)?:(.*)$")
