@@ -5,6 +5,10 @@
 # Switch to the directory of this file
 cd "$( dirname "${BASH_SOURCE[0]}" )" || exit
 
+# Even Vercel needs venvs now, since otherwise pip will not work
+python3 -m venv venv
+source venv/bin/activate
+
 # install the dependencies
 python3 -m pip install poetry
 python3 -m poetry install
