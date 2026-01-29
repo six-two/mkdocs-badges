@@ -101,7 +101,7 @@ class BadgesPlugin(BasePlugin[BadgesPluginConfig]):
                 warning("Plugin is disabled")
 
             return markdown
-        except Exception as error:
+        except Exception:
             raise mkdocs.exceptions.PluginError("Uncaught exception in badges_plugin::on_page_markdown.\n" + traceback.format_exc())
 
     def on_post_build(self, config: MkDocsConfig) -> None:

@@ -46,6 +46,10 @@ poetry install && poetry run python -m unittest
 
 ## Notable changes
 
+### Version 0.5.2
+
+- Fix warning on Python 3.14 (thanks @dstam)
+
 ### Version 0.5.1
 
 - Parse lines starting with whitespace (lists, admonitions, etc.), which were previously ignored.

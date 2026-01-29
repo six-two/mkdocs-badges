@@ -1,6 +1,6 @@
 [project]
 name = "mkdocs-badges"
-version = "0.5.1"
+version = "0.5.2"
 description = "Add badges to your MkDocs page"
 authors = [
     {name = "six-two",email = "pip@six-two.dev"}
