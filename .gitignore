@@ -1,5 +1,6 @@
 # mkdocs build output (from ./build-docs.sh)
 public/
+docs_test/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -14,6 +14,8 @@ license = "MIT"
 homepage = "https://github.com/six-two/mkdocs-badges"
 repository = "https://github.com/six-two/mkdocs-badges"
 
+[project.scripts]
+markdown-badges-standalone = "mkdocs_badges.standalone_cli:main"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
