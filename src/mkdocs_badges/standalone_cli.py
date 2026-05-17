@@ -19,7 +19,7 @@ def exit_with_message(msg):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--docs", "-d", default=".", help="directory containing your markdown files")
+    ap.add_argument("--docs", "-d", default=".", help="directory containing your markdown (or HTML) files")
     # Settings
     ap.add_argument("--install-badge-data", "-I", default="", help="path to file with additional install badge data")
     ap.add_argument("--tag-page-link", "-T", default="/index.html", help="URL of the tag page (for tag badges)")
@@ -66,7 +66,7 @@ def main():
     docs_dir = args.docs
     for dirpath, dir_names, file_names in os.walk(docs_dir):
         for file_name in file_names:
-            if file_name.lower().endswith(".md"):
+            if file_name.lower().split(".")[-1] in ["md", "html", "htm"]:
                 file_path = os.path.join(dirpath, file_name)
                 try:
                     with open(file_path) as f:
