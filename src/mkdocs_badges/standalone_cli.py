@@ -19,17 +19,18 @@ def exit_with_message(msg):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--docs", "-d", default=".", help="directory containing your markdown (or HTML) files")
+    ap.add_argument("--docs", "-d", default=".", help="directory containing your markdown (or HTML) files (default: '.')")
     # Settings
     ap.add_argument("--install-badge-data", "-I", default="", help="path to file with additional install badge data")
-    ap.add_argument("--tag-page-link", "-T", default="/index.html", help="URL of the tag page (for tag badges)")
+    ap.add_argument("--tag-page-link", "-T", default="/index.html", help="URL of the tag page (for tag badges, default: '/index.html')")
     # ap.add_argument("--disable-warnings", "-q", action="store_true", help="don't print warnings about malformed badges")
     ap.add_argument("--copy-resources", "-c", action="store_true", help="copy the javascript and CSS files")
-    ap.add_argument("--separator", "-b", default="|", help="badge element separator")
-    ap.add_argument("--table-separator", "-t", default="^", help="badge separator for badges in table cells")
-    ap.add_argument("--inline-badge-start", "-s", default="[", help="start string for inline badges")
-    ap.add_argument("--inline-badge-end", "-e", default="]", help="end string for inline badges")
+    ap.add_argument("--separator", "-b", default="|", help="badge element separator (default: '|')")
+    ap.add_argument("--table-separator", "-t", default="^", help="badge separator for badges in table cells (default: '^')")
+    ap.add_argument("--inline-badge-start", "-s", default="[", help="start string for inline badges (defaukt: '[')")
+    ap.add_argument("--inline-badge-end", "-e", default="]", help="end string for inline badges (default: ']')")
     ap.add_argument("--ignore-lines-starting-with-whitespace", "-l", action="store_true", help="ignore lines starting with whitespace")
+    ap.add_argument("--file-encoding", "-E", default="utf-8", help="file encoding to read and write the markdown files (default: 'utf-8')")
     args = ap.parse_args()
 
     config = StandaloneConfig(
@@ -42,6 +43,7 @@ def main():
         inline_badge_end=args.inline_badge_end,
         ignore_lines_starting_with_whitespace=args.ignore_lines_starting_with_whitespace,
         copy_resources=args.copy_resources,
+        file_encoding=args.file_encoding,
     )
 
     # @TODO: Is there a way to not have to duplicate this validation (duplicate of plugin.py)
@@ -69,7 +71,7 @@ def main():
             if file_name.lower().split(".")[-1] in ["md", "html", "htm"]:
                 file_path = os.path.join(dirpath, file_name)
                 try:
-                    with open(file_path) as f:
+                    with open(file_path, encoding=config.file_encoding) as f:
                         og_markdown = markdown = f.read()
 
                     markdown = replace_badges(file_path, markdown, config.separator, config.table_separator, config.inline_badge_start, config.inline_badge_end, config.ignore_lines_starting_with_whitespace, install_badge_manager, tag_badge_manager)
@@ -77,9 +79,11 @@ def main():
 
                     if markdown != og_markdown:
                         print(f"Modified: {file_path}")
-                        with open(file_path, "w") as f:
+                        with open(file_path, "w", encoding=config.file_encoding) as f:
                             f.write(markdown)
-                    
+                except UnicodeDecodeError as ex:
+                    print(f"Error reading file '{file_path}' with encoding '{config.file_encoding}'. Please make sure to specify the correct encoding with the --encoding flag.")
+                    print("Original error:", ex)
                 except Exception:
                     print(f"Error processing '{file_path}'")
                     traceback.print_exc()
@@ -100,4 +104,5 @@ class StandaloneConfig(NamedTuple):
     inline_badge_end: str
     ignore_lines_starting_with_whitespace: bool
     copy_resources: bool
+    file_encoding: str
 
