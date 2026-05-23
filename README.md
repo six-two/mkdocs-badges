@@ -9,7 +9,7 @@ This package allows you to add badges to your MkDocs site.
 
 To make it easy to keep it up to date for all my plugins, I hosted my [intentions of what platforms to support](https://six-two.dev/plugin-support-for-mkdocs-and-forks/) on my website.
 
-For this plugin there is a [standalone Markdown preprocessor](@TODO), that you can execute before using any Markdown based static site generator.
+For this plugin there is a [standalone Markdown preprocessor](https://mkdocs-badges.six-two.dev/preprocessor/), that you can execute before using any Markdown based static site generator.
 
 ## Documentation
 
