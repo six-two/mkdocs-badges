@@ -62,3 +62,21 @@ This is to be expected, as the current code looks for Markdown table syntax like
 Doing HTML parsing might be possible with beautifulsoup, but would require extra external dependencies.
 If you really need this feature, open an issue and I will see how hard it is to implement.
 Or implement it yourself and send me a PR :)
+
+### Some Links Broken in HTML Mode
+
+If your site generator does not process Markdown inside the badge syntax, you may get errors like the following:
+```
+Failed to parse hostname from link badge value: &lt;https://github.com/six-two/mkdocs-badges&gt;
+Failed to parse hostname from link badge value: a href="https://github.com/six-two/mkdocs-badges">https://github.com/six-two/mkdocs-badges</a
+```
+
+If this is the case replace badges that contain Markdown links like this ...
+```markdown title="Problematic Markdown syntax"
+|Simple badge with link|<https://github.com/six-two/mkdocs-badges>|
+```
+
+... with proper link badges:
+```markdown title="Proper link badges"
+L|Simple badge with link|https://github.com/six-two/mkdocs-badges|
+```

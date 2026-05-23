@@ -1,6 +1,6 @@
 [project]
 name = "mkdocs-badges"
-version = "0.5.2"
+version = "0.6.0"
 description = "Add badges to your MkDocs page"
 authors = [
     {name = "six-two",email = "pip@six-two.dev"}
@@ -8,7 +8,6 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
-    "mkdocs (>=1.5.0)"
 ]
 license = "MIT"
 homepage = "https://github.com/six-two/mkdocs-badges"

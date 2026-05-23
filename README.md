@@ -52,7 +52,7 @@ poetry install && poetry run python -m unittest
 
 ## Notable changes
 
-### HEAD (Future Version 0.6.0)
+### Version 0.6.0
 
 - Removed dependency declaration of `mkdocs`
 - Added standalone preprocessor `markdown-badges-standalone` for non-MkDocs site generators (Zensical, etc)
