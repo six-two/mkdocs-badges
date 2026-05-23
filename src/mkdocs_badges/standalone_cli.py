@@ -24,13 +24,15 @@ def main():
     ap.add_argument("--install-badge-data", "-I", default="", help="path to file with additional install badge data")
     ap.add_argument("--tag-page-link", "-T", default="/index.html", help="URL of the tag page (for tag badges, default: '/index.html')")
     # ap.add_argument("--disable-warnings", "-q", action="store_true", help="don't print warnings about malformed badges")
-    ap.add_argument("--copy-resources", "-c", action="store_true", help="copy the javascript and CSS files")
     ap.add_argument("--separator", "-b", default="|", help="badge element separator (default: '|')")
     ap.add_argument("--table-separator", "-t", default="^", help="badge separator for badges in table cells (default: '^')")
     ap.add_argument("--inline-badge-start", "-s", default="[", help="start string for inline badges (defaukt: '[')")
     ap.add_argument("--inline-badge-end", "-e", default="]", help="end string for inline badges (default: ']')")
     ap.add_argument("--ignore-lines-starting-with-whitespace", "-l", action="store_true", help="ignore lines starting with whitespace")
     ap.add_argument("--file-encoding", "-E", default="utf-8", help="file encoding to read and write the markdown files (default: 'utf-8')")
+    ap.add_argument("--copy-resources", "-c", action="store_true", help="copy the javascript and CSS files")
+    ap.add_argument("--css-path", default=DEFAULT_BADGE_CSS_PATH, help=f"the path where the CSS file will be written to if --copy-resources is used (default: {DEFAULT_BADGE_CSS_PATH})")
+    ap.add_argument("--js-path", default=DEFAULT_BADGE_JS_PATH, help=f"the path where the Javascript file will be written to if --copy-resources is used (default: {DEFAULT_BADGE_JS_PATH})")
     args = ap.parse_args()
 
     config = StandaloneConfig(
@@ -89,9 +91,9 @@ def main():
                     traceback.print_exc()
 
     if args.copy_resources:
-        copy_asset_if_target_file_does_not_exist(docs_dir, DEFAULT_BADGE_CSS_PATH, BADGE_CSS)
-        copy_asset_if_target_file_does_not_exist(docs_dir, DEFAULT_BADGE_JS_PATH, BADGE_JS)
-        print(f"\nRemember to add '{DEFAULT_BADGE_CSS_PATH}' as extra_css and '{DEFAULT_BADGE_JS_PATH}' as extra_javascript")
+        copy_asset_if_target_file_does_not_exist(docs_dir, args.css_path, BADGE_CSS)
+        copy_asset_if_target_file_does_not_exist(docs_dir, args.js_path, BADGE_JS)
+        print(f"\nRemember to add '{args.css_path}' as extra_css and '{args.js_path}' as extra_javascript")
 
 
 class StandaloneConfig(NamedTuple):
