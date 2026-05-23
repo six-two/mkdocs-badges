@@ -5,14 +5,15 @@ I|pypi|mkdocs-badges|
 L|Documentation|https://mkdocs-badges.six-two.dev/|
 
 `mkdocs-badges` is a plugin for [mkdocs](https://www.mkdocs.org/), that creates badges like the ones you see above this line.
+You can also use it in [preprocessor mode](preprocessor.md) with any other Markdown-based static site generator.
 
 ## Features
 
-- Should be simple to [setup](setup.md)
+- Should be simple to [setup](setup.md) with MkDocs / ProperDocs
 - When a badge is clicked it can
     - Copy text to clipboard
     - Redirect to an arbitrary website
-- Works with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
+- Works with [MaterialX](https://jaywhj.github.io/mkdocs-materialx/) / [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
 
 ## Interested?
 

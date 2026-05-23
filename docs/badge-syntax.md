@@ -54,6 +54,7 @@ Result:
 |second|badge|
 
 |third|badge|
+
 </span>
 
 

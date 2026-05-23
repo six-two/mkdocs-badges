@@ -5,6 +5,12 @@
 
 This package allows you to add badges to your MkDocs site.
 
+## Note on Zensical, MkDocs 1.x, ProperDocs, etc
+
+To make it easy to keep it up to date for all my plugins, I hosted my [intentions of what platforms to support](https://six-two.dev/plugin-support-for-mkdocs-and-forks/) on my website.
+
+For this plugin there is a [standalone Markdown preprocessor](@TODO), that you can execute before using any Markdown based static site generator.
+
 ## Documentation
 
 This README is just a short intro to the package.
@@ -45,6 +51,11 @@ poetry install && poetry run python -m unittest
     This seems to be an issue with <https://github.com/mlcheng/js-toast/> (used in `src/mkdocs_badges/assets/badge.js`) which seems no longer maintained.
 
 ## Notable changes
+
+### HEAD (Future Version 0.6.0)
+
+- Removed dependency declaration of `mkdocs`
+- Added standalone preprocessor `markdown-badges-standalone` for non-MkDocs site generators (Zensical, etc)
 
 ### Version 0.5.2
 
