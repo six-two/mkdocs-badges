@@ -1,4 +1,4 @@
-# Preprocessor Mode
+# Standalone Preprocessor
 
 If you want to use a different Markdown-based static site generator from ProperDocs / MkDocs, then you can use the included `markdown-badges-standalone` CLI tool.
 It takes a folder of Markdown files and replaces all badges found in it with badge HTML.
@@ -31,7 +31,7 @@ When you include the `--copy-resources` flag, the JavaScript and CSS needed for 
 
 You should then reference the files on every page. In `mkdocs` and `properdocs` this can be done using:
 
-```yaml title=mkdocs.yml
+```yaml title="mkdocs.yml"
 extra_css:
 - assets/stylesheets/badge.css
 
@@ -40,7 +40,7 @@ extra_javascript:
 ```
 
 For any other static site generator you want to somehow include the following HTML in each page, preferably in the HTML `<head>` section:
-```html
+```html title="Include this in the HTML <head> tag"
 <script src="assets/javascripts/badge.js"></script>
 <style src="assets/stylesheets/badge.css"></style>
 ```

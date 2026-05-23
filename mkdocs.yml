@@ -9,11 +9,12 @@ theme:
     - navigation.expand
 nav:
 # Hide the index page -> would otherwise result in two mkdocs-badges links
-- "": index.md
+- "Homepage": index.md
 - setup.md
 - badge-types.md
 - badge-syntax.md
 - styling.md
+- preprocessor.md
 - migration.md
 - "Tests":
   - test/basic.md
