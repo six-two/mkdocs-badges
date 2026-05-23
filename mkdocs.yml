@@ -2,7 +2,7 @@ site_name: mkdocs-badges
 repo_url: https://github.com/six-two/mkdocs-badges
 
 theme:
-  name: material
+  name: materialx
   features:
     - content.code.copy
     - navigation.footer

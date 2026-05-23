@@ -6,20 +6,26 @@
 cd "$( dirname "${BASH_SOURCE[0]}" )" || exit
 
 # Even Vercel needs venvs now, since otherwise pip will not work
-python3 -m venv venv
+if [[ ! -f venv/bin/activate ]]; then
+    echo "[*] Creating venv"
+    python3 -m venv venv
+fi
+echo "[*] Using venv"
 source venv/bin/activate
 
 # install the dependencies
-python3 -m pip install poetry
-python3 -m poetry install
+python3 -m pip install -r requirements.txt
 
 if [[ -n "$DEPLOY_STABLE" ]]; then
     echo "[*] Downloading latest released version of this plugin"
-    python3 -m poetry run pip install --force-reinstall --no-deps --upgrade mkdocs-badges
+    python3 -m pip install --force-reinstall --no-deps --upgrade mkdocs-badges
+else
+    echo "[*] Installing bleading edge version of this plugin"
+    python3 -m pip install .
 fi
 
 # Vercel prefers outputs to be in public/
-python3 -m poetry run mkdocs build -d public
+python3 -m properdocs build -d public
 
 if [[ -n "$1" ]]; then
     echo "[*] Starting web server on 127.0.0.1:$1"
